@@ -1,0 +1,718 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="21.0.3" class="java.beans.XMLDecoder">
+ <object class="com.example.cloudanalystt.RootObjectToSaveData">
+  <void property="advancedData">
+   <object class="com.example.cloudanalystt.utils.utilsForSerializable.AdvancedData">
+    <void property="LBPolicy">
+     <string>Циклический (Круговой) алгоритм</string>
+    </void>
+    <void property="executableInstructionLengthPrReq">
+     <int>100</int>
+    </void>
+    <void property="requestGroupingFactorInDC">
+     <int>10</int>
+    </void>
+    <void property="usGroupingFactorInUB">
+     <int>10</int>
+    </void>
+   </object>
+  </void>
+  <void property="listAppDeploymentConf">
+   <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.AppDeploymentConfigurationData">
+      <void property="bandwidth">
+       <int>1000</int>
+      </void>
+      <void property="dataCenter">
+       <string>DC1</string>
+      </void>
+      <void property="imageSize">
+       <int>10000</int>
+      </void>
+      <void property="memory">
+       <int>512</int>
+      </void>
+      <void property="virtualMachines">
+       <int>5</int>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.AppDeploymentConfigurationData">
+      <void property="bandwidth">
+       <int>1000</int>
+      </void>
+      <void property="dataCenter">
+       <string>DC2</string>
+      </void>
+      <void property="imageSize">
+       <int>10000</int>
+      </void>
+      <void property="memory">
+       <int>512</int>
+      </void>
+      <void property="virtualMachines">
+       <int>5</int>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.AppDeploymentConfigurationData">
+      <void property="bandwidth">
+       <int>1000</int>
+      </void>
+      <void property="dataCenter">
+       <string>DC3</string>
+      </void>
+      <void property="imageSize">
+       <int>10000</int>
+      </void>
+      <void property="memory">
+       <int>512</int>
+      </void>
+      <void property="virtualMachines">
+       <int>5</int>
+      </void>
+     </object>
+    </void>
+   </object>
+  </void>
+  <void property="listDataCentres">
+   <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.DataCentresData">
+      <void property="OS">
+       <string>Linux</string>
+      </void>
+      <void property="VMM">
+       <string>Xen</string>
+      </void>
+      <void property="arch">
+       <string>x86</string>
+      </void>
+      <void property="costPerVm">
+       <double>0.1</double>
+      </void>
+      <void property="dataTransferCost">
+       <double>0.1</double>
+      </void>
+      <void property="listHwDetailsOfDCS">
+       <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="id">
+           <int>1</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="id">
+           <int>2</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="id">
+           <int>3</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="listServersDC">
+       <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.ServersDCData">
+          <void property="code">
+           <string></string>
+          </void>
+          <void property="count">
+           <int>1</int>
+          </void>
+          <void property="prefix">
+           <string>Сервер 1</string>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="memoryCost">
+       <double>0.05</double>
+      </void>
+      <void property="name">
+       <string>DC1</string>
+      </void>
+      <void property="physicalHWUnits">
+       <int>4</int>
+      </void>
+      <void property="region">
+       <int>5</int>
+      </void>
+      <void property="storageCost">
+       <double>0.1</double>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.DataCentresData">
+      <void property="OS">
+       <string>Linux</string>
+      </void>
+      <void property="VMM">
+       <string>Xen</string>
+      </void>
+      <void property="arch">
+       <string>x86</string>
+      </void>
+      <void property="costPerVm">
+       <double>0.1</double>
+      </void>
+      <void property="dataTransferCost">
+       <double>0.1</double>
+      </void>
+      <void property="listHwDetailsOfDCS">
+       <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="id">
+           <int>1</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="id">
+           <int>2</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="listServersDC">
+       <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.ServersDCData">
+          <void property="code">
+           <string></string>
+          </void>
+          <void property="count">
+           <int>1</int>
+          </void>
+          <void property="prefix">
+           <string>Сервер 1</string>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="memoryCost">
+       <double>0.05</double>
+      </void>
+      <void property="name">
+       <string>DC2</string>
+      </void>
+      <void property="physicalHWUnits">
+       <int>3</int>
+      </void>
+      <void property="region">
+       <int>5</int>
+      </void>
+      <void property="storageCost">
+       <double>0.1</double>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.DataCentresData">
+      <void property="OS">
+       <string>Linux</string>
+      </void>
+      <void property="VMM">
+       <string>Xen</string>
+      </void>
+      <void property="arch">
+       <string>x86</string>
+      </void>
+      <void property="costPerVm">
+       <double>0.1</double>
+      </void>
+      <void property="dataTransferCost">
+       <double>0.1</double>
+      </void>
+      <void property="listHwDetailsOfDCS">
+       <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="id">
+           <int>1</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="listServersDC">
+       <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.ServersDCData">
+          <void property="code">
+           <string></string>
+          </void>
+          <void property="count">
+           <int>1</int>
+          </void>
+          <void property="prefix">
+           <string>Сервер 1</string>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="memoryCost">
+       <double>0.05</double>
+      </void>
+      <void property="name">
+       <string>DC3</string>
+      </void>
+      <void property="physicalHWUnits">
+       <int>2</int>
+      </void>
+      <void property="region">
+       <int>5</int>
+      </void>
+      <void property="storageCost">
+       <double>0.1</double>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.DataCentresData">
+      <void property="OS">
+       <string>Linux</string>
+      </void>
+      <void property="VMM">
+       <string>Xen</string>
+      </void>
+      <void property="arch">
+       <string>x86</string>
+      </void>
+      <void property="costPerVm">
+       <double>0.1</double>
+      </void>
+      <void property="dataTransferCost">
+       <double>0.1</double>
+      </void>
+      <void property="listHwDetailsOfDCS">
+       <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="listServersDC">
+       <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.ServersDCData">
+          <void property="code">
+           <string></string>
+          </void>
+          <void property="count">
+           <int>1</int>
+          </void>
+          <void property="prefix">
+           <string>Сервер 1</string>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="memoryCost">
+       <double>0.05</double>
+      </void>
+      <void property="name">
+       <string>DC4</string>
+      </void>
+      <void property="physicalHWUnits">
+       <int>1</int>
+      </void>
+      <void property="region">
+       <int>5</int>
+      </void>
+      <void property="storageCost">
+       <double>0.1</double>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.DataCentresData">
+      <void property="OS">
+       <string>Linux</string>
+      </void>
+      <void property="VMM">
+       <string>Xen</string>
+      </void>
+      <void property="arch">
+       <string>x86</string>
+      </void>
+      <void property="costPerVm">
+       <double>0.1</double>
+      </void>
+      <void property="dataTransferCost">
+       <double>0.1</double>
+      </void>
+      <void property="listHwDetailsOfDCS">
+       <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.PhysicalHWDetailsOfDCData">
+          <void property="VMPolicy">
+           <string>TIME_SHARED</string>
+          </void>
+          <void property="availableBandwidth">
+           <int>1000000</int>
+          </void>
+          <void property="memory">
+           <int>204800</int>
+          </void>
+          <void property="numOfProcessors">
+           <int>4</int>
+          </void>
+          <void property="processorSpeed">
+           <int>10000</int>
+          </void>
+          <void property="storage">
+           <int>100000000</int>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="listServersDC">
+       <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.ServersDCData">
+          <void property="code">
+           <string></string>
+          </void>
+          <void property="count">
+           <int>1</int>
+          </void>
+          <void property="prefix">
+           <string>Сервер 1</string>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void property="memoryCost">
+       <double>0.05</double>
+      </void>
+      <void property="name">
+       <string>DC5</string>
+      </void>
+      <void property="physicalHWUnits">
+       <int>1</int>
+      </void>
+      <void property="region">
+       <int>5</int>
+      </void>
+      <void property="storageCost">
+       <double>0.1</double>
+      </void>
+     </object>
+    </void>
+   </object>
+  </void>
+  <void property="listUserBases">
+   <object class="com.example.cloudanalystt.utils.utilsForSerializable.SerializableList">
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.UserBaseData">
+      <void property="avgPkOffUsrs">
+       <int>100</int>
+      </void>
+      <void property="avgPkUsrs">
+       <int>1000</int>
+      </void>
+      <void property="dataSzPrRq">
+       <int>100</int>
+      </void>
+      <void property="name">
+       <string>UB1</string>
+      </void>
+      <void property="peakHrEnd">
+       <int>9</int>
+      </void>
+      <void property="peakHrStart">
+       <int>3</int>
+      </void>
+      <void property="region">
+       <int>1</int>
+      </void>
+      <void property="requsetsPrUsPrHr">
+       <int>60</int>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.UserBaseData">
+      <void property="avgPkOffUsrs">
+       <int>100</int>
+      </void>
+      <void property="avgPkUsrs">
+       <int>1000</int>
+      </void>
+      <void property="dataSzPrRq">
+       <int>100</int>
+      </void>
+      <void property="name">
+       <string>UB2</string>
+      </void>
+      <void property="peakHrEnd">
+       <int>9</int>
+      </void>
+      <void property="peakHrStart">
+       <int>3</int>
+      </void>
+      <void property="region">
+       <int>1</int>
+      </void>
+      <void property="requsetsPrUsPrHr">
+       <int>60</int>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.example.cloudanalystt.utils.utilsForSerializable.UserBaseData">
+      <void property="avgPkOffUsrs">
+       <int>100</int>
+      </void>
+      <void property="avgPkUsrs">
+       <int>1000</int>
+      </void>
+      <void property="dataSzPrRq">
+       <int>100</int>
+      </void>
+      <void property="name">
+       <string>UB3</string>
+      </void>
+      <void property="peakHrEnd">
+       <int>9</int>
+      </void>
+      <void property="peakHrStart">
+       <int>3</int>
+      </void>
+      <void property="region">
+       <int>1</int>
+      </void>
+      <void property="requsetsPrUsPrHr">
+       <int>60</int>
+      </void>
+     </object>
+    </void>
+   </object>
+  </void>
+  <void property="serviceBrokerPolicy">
+   <string>Ближайший ЦОД</string>
+  </void>
+  <void property="simulationDuration">
+   <string>минуты</string>
+  </void>
+  <void property="valueSimulationDuration">
+   <double>60.0</double>
+  </void>
+ </object>
+</java>
