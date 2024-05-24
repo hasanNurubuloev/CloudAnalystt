@@ -1,14 +1,15 @@
 package com.example.cloudanalystt.utils.utilsForSerializable;
 
-import javafx.beans.property.StringProperty;
+import java.io.Serializable;
 
-public class ServersDCData {
+public class ServersDCData implements Serializable {
     private String name;
     private String prefix;
     private int count;
     private String code;
 
-    public ServersDCData(String name ,String prefix, int count, String code) {
+    public ServersDCData(String name, String prefix, int count, String code) {
+        this.name = name;
         this.prefix = prefix;
         this.count = count;
         this.code = code;

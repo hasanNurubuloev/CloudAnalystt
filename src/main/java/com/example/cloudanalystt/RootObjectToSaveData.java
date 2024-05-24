@@ -19,6 +19,19 @@ public class RootObjectToSaveData implements Serializable {
     String simulationDuration;
     String serviceBrokerPolicy;
 
+    public RootObjectToSaveData() {
+    }
+
+    public RootObjectToSaveData(List<UserBaseData> listUserBases, List<AppDeploymentConfigurationData> listAppDeploymentConf, List<DataCentresData> listDataCentres, AdvancedData advancedData, double valueSimulationDuration, String simulationDuration, String serviceBrokerPolicy) {
+        this.listUserBases = listUserBases;
+        this.listAppDeploymentConf = listAppDeploymentConf;
+        this.listDataCentres = listDataCentres;
+        this.advancedData = advancedData;
+        this.valueSimulationDuration = valueSimulationDuration;
+        this.simulationDuration = simulationDuration;
+        this.serviceBrokerPolicy = serviceBrokerPolicy;
+    }
+
     public double getValueSimulationDuration() {
         return valueSimulationDuration;
     }

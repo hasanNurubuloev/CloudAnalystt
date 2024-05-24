@@ -9,6 +9,10 @@ public class ServersDC {
     private StringProperty count;
     private String code;
 
+    public ServersDC copy() {
+        return new ServersDC(this.name.get(), this.prefix.get(), Integer.parseInt(this.count.get()), this.code);
+    }
+
     public ServersDC(String name,  String prefix, int count, String code) {
         this.name = new SimpleStringProperty(name);
         this.prefix = new SimpleStringProperty(prefix);

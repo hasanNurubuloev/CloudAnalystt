@@ -8,17 +8,22 @@ import java.io.Serializable;
 public class UserBases implements Serializable {
     private SimpleStringProperty name;
     private SimpleStringProperty region;
-    private SimpleStringProperty requsetsPrUsPrHr;
+    private SimpleStringProperty requestsPrUsPrHr;
     private SimpleStringProperty dataSzPrRq;
     private SimpleStringProperty peakHrStart;
     private SimpleStringProperty peakHrEnd;
     private SimpleStringProperty avgPkUsrs;
     private SimpleStringProperty avgPkOffUsrs;
 
+    public UserBases copy() {
+
+        return new UserBases(this.name.get(), Integer.parseInt(this.region.get()), Integer.parseInt(this.requestsPrUsPrHr.get()), Integer.parseInt(this.dataSzPrRq.get()), Integer.parseInt(this.peakHrStart.get()), Integer.parseInt(this.peakHrEnd.get()), Integer.parseInt(this.avgPkUsrs.get()), Integer.parseInt(this.avgPkOffUsrs.get()));
+    }
+
     public UserBases(String name, int region, int requsetsPrUsPrHr, int dataSzPrRq, int peakHrStart, int peakHrEnd, int avgPkUsrs, int avgPkOffUsrs) {
         this.name = new SimpleStringProperty(name);
         this.region = new SimpleStringProperty(String.valueOf(region));
-        this.requsetsPrUsPrHr = new SimpleStringProperty(String.valueOf(requsetsPrUsPrHr));
+        this.requestsPrUsPrHr = new SimpleStringProperty(String.valueOf(requsetsPrUsPrHr));
         this.dataSzPrRq = new SimpleStringProperty(String.valueOf(dataSzPrRq));
         this.peakHrStart = new SimpleStringProperty(String.valueOf(peakHrStart));
         this.peakHrEnd = new SimpleStringProperty(String.valueOf(peakHrEnd));
@@ -56,16 +61,16 @@ public class UserBases implements Serializable {
         this.region.set(String.valueOf(region));
     }
 
-    public int getRequsetsPrUsPrHr() {
-        return Integer.parseInt(requsetsPrUsPrHr.get());
+    public int getRequestsPrUsPrHr() {
+        return Integer.parseInt(requestsPrUsPrHr.get());
     }
 
-    public SimpleStringProperty requsetsPrUsPrHrProperty() {
-        return requsetsPrUsPrHr;
+    public SimpleStringProperty requestsPrUsPrHrProperty() {
+        return requestsPrUsPrHr;
     }
 
-    public void setRequsetsPrUsPrHr(int requsetsPrUsPrHr) {
-        this.requsetsPrUsPrHr.set(String.valueOf(requsetsPrUsPrHr));
+    public void setRequestsPrUsPrHr(int requestsPrUsPrHr) {
+        this.requestsPrUsPrHr.set(String.valueOf(requestsPrUsPrHr));
     }
 
     public int getDataSzPrRq() {
@@ -133,7 +138,7 @@ public class UserBases implements Serializable {
         return "UserBases{" +
                 "name=" + name +
                 ", region=" + region +
-                ", requsetsPrUsPrHr=" + requsetsPrUsPrHr +
+                ", requsetsPrUsPrHr=" + requestsPrUsPrHr +
                 ", dataSzPrRq=" + dataSzPrRq +
                 ", peakHrStart=" + peakHrStart +
                 ", peakHrEnd=" + peakHrEnd +

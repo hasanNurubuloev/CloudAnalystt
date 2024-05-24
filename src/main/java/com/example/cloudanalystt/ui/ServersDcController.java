@@ -1,4 +1,4 @@
-package com.example.cloudanalystt;
+package com.example.cloudanalystt.ui;
 
 import com.example.cloudanalystt.utils.ServersDC;
 import javafx.collections.FXCollections;
@@ -9,12 +9,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 public class ServersDcController {
     @FXML
-    private TableView<ServersDC> tableServersDC = new TableView<ServersDC>();
+    private TableView<ServersDC> tableServersDC = new TableView<>();
     @FXML
     private TableColumn<ServersDC, String> nameCol;
     @FXML
@@ -50,6 +47,8 @@ public class ServersDcController {
 
     private String action;
     private int index;
+
+    public ServersDcController (){}
 
     @FXML
     void initialize() {
@@ -156,11 +155,10 @@ public class ServersDcController {
 
     public void setListServers(ObservableList<ServersDC> listServers) {
         this.listServers = listServers;
-//        tableServersDC.setItems(this.listServers);
         initViews(listServers);
     }
 
-    private void alertError(String contentText) {
+    public void alertError(String contentText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка");
         alert.setHeaderText(null);

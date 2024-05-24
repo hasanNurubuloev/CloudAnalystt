@@ -1,6 +1,7 @@
 package com.example.cloudanalystt.utils;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.Serializable;
@@ -19,6 +20,18 @@ public class DataCentres  implements Serializable {
     private ObservableList<PhysicalHWDetailsOfDC> listHwDetailsOfDCS;
     private ObservableList<ServersDC> listServersDC;
 
+    public DataCentres copy(ObservableList<PhysicalHWDetailsOfDC> copiedHwDetails, ObservableList<ServersDC> copiedServersDC) {
+//        ObservableList<PhysicalHWDetailsOfDC> copiedHwDetails = FXCollections.observableArrayList();
+//        for (PhysicalHWDetailsOfDC hw : this.listHwDetailsOfDCS) {
+//            copiedHwDetails.add(hw.copy());
+//        }
+//
+//        ObservableList<ServersDC> copiedServersDC = FXCollections.observableArrayList();
+//        for (ServersDC server : this.listServersDC) {
+//            copiedServersDC.add(server.copy());
+//        }
+        return new DataCentres(this.name.get(), Integer.parseInt(this.region.get()), this.arch.get(), this.OS.get(), this.VMM.get(), Double.parseDouble(this.costPerVm.get()), Double.parseDouble(this.memoryCost.get()), Double.parseDouble(this.storageCost.get()), Double.parseDouble(this.dataTransferCost.get()), Integer.parseInt(this.physicalHWUnits.get()), copiedHwDetails, copiedServersDC);
+    }
 
 public DataCentres(String name, int region,String arch, String OS, String VMM, double costPerVm, double memoryCost, double storageCost, double dataTransferCost, int physicalHWUnits,  ObservableList<PhysicalHWDetailsOfDC> listHwDetailsOfDCS, ObservableList<ServersDC> listServersDC) {
         this.name = new SimpleStringProperty(name);

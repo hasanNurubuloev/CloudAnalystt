@@ -1,15 +1,17 @@
-package com.example.cloudanalystt;
+package com.example.cloudanalystt.ui;
 
+import com.example.cloudanalystt.HelloApplication;
+import com.example.cloudanalystt.RootObjectToSaveData;
+import com.example.cloudanalystt.XMLWriter;
 import com.example.cloudanalystt.utils.*;
 import com.example.cloudanalystt.utils.utilsForSerializable.*;
-import javafx.application.Application;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
@@ -20,10 +22,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.*;
@@ -32,17 +30,43 @@ import java.util.*;
 
 public class MainConfigurationController {
 
-    private final ObservableList<PhysicalHWDetailsOfDC> listHWDetails = FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED"));
+    private ObservableList<PhysicalHWDetailsOfDC> listHWDetails = FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED"));
     private final ObservableList<ServersDC> listServersDC = FXCollections.observableArrayList(new ServersDC("Сервер 1", "s1", 1, ""));
 
     @FXML
-    private Button button_add_application_conf_table;
+    AnchorPane paneConfigurationSimulation;
     @FXML
-    private Button button_add_table_users;
+    Button buttonConfigureSimulation;
     @FXML
-    private Button button_remove_application_conf_table;
+    Button buttonInternetCharacteristics;
     @FXML
-    private Button button_remove_table_users;
+    Button buttonRunSimulation;
+    @FXML
+    Button buttonExit;
+
+    boolean isPressedContinue = false;
+
+    private ObservableList<UserBases> originalListUserBases  = FXCollections.observableArrayList(new UserBases("UB1", 1, 60, 100, 3, 9, 1000, 100));
+    private ObservableList<AppDeploymentConfiguration> originalListAppConf  = FXCollections.observableArrayList(new AppDeploymentConfiguration("DC1", 5, 10000, 512, 1000));
+    private final ObservableList<PhysicalHWDetailsOfDC> originalListHwDetail= FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED"));
+    private final ObservableList<ServersDC> originalListServersDC = FXCollections.observableArrayList(new ServersDC("Сервер 1", "s1", 1, ""));
+    private ObservableList<DataCentres> originalListDataCentres= FXCollections.observableArrayList(new DataCentres("DC1", 5, "x86", "Linux", "Xen", 0.1, 0.05, 0.1, 0.1, 1, FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED")), FXCollections.observableArrayList(new ServersDC("Сервер 1", "s1", 1, ""))));
+    private String originalValueSimDur = "60.0";
+    private String originalSimDur = "минуты";
+    private String originalBrokerPolicy = "Ближайший ЦОД";
+    private String originalUsGroupingFactorInUB = "10";
+    private String originalRequestGroupingFactorInDC = "10";
+    private String originalExecutableInstructionLengthPrReq = "100";
+    private String originalLBPolicy = "Циклический (Круговой) алгоритм";
+
+    @FXML
+    private Button buttonAddApplicationConfTable;
+    @FXML
+    private Button buttonAddTableUsers;
+    @FXML
+    private Button buttonRemoveApplicationConfTable;
+    @FXML
+    private Button buttonRemoveTableUsers;
     @FXML
     private ComboBox<String> comboboxBrokerPolicy;
     @FXML
@@ -52,34 +76,34 @@ public class MainConfigurationController {
     @FXML
     private TableView<UserBases> tableUserBases = new TableView<>();
     @FXML
-    private TableColumn<UserBases, String> name_col_us;
+    private TableColumn<UserBases, String> nameColUs;
     @FXML
-    private TableColumn<UserBases, String> region_col_us;
+    private TableColumn<UserBases, String> regionColUs;
     @FXML
-    private TableColumn<UserBases, String> requests_pr_us_pr_hr_col_us;
+    private TableColumn<UserBases, String> requestsPrUsPrHrColUs;
     @FXML
-    private TableColumn<UserBases, String> data_sz_pr_rq_col_us;
+    private TableColumn<UserBases, String> dataSzPrRqColUs;
     @FXML
-    private TableColumn<UserBases, String> peak_hr_start_col_us;
+    private TableColumn<UserBases, String> peakHrStartColUs;
     @FXML
-    private TableColumn<UserBases, String> peak_hr_end_col_us;
+    private TableColumn<UserBases, String> peakHrEndColUs;
     @FXML
-    private TableColumn<UserBases, String> avg_pk_us_col_us;
+    private TableColumn<UserBases, String> avgPkUsColUs;
     @FXML
-    private TableColumn<UserBases, String> avg_pk_off_us_col_us;
+    private TableColumn<UserBases, String> avgPkOffUsColUs;
     ObservableList<UserBases> listUserBases = FXCollections.observableArrayList(new UserBases("UB1", 1, 60, 100, 3, 9, 1000, 100));
 
 
     @FXML
     private TableView<AppDeploymentConfiguration> tableAppDeplConf = new TableView<>();
     @FXML
-    private TableColumn<AppDeploymentConfiguration, String> data_center_col;
+    private TableColumn<AppDeploymentConfiguration, String> dataCenterCol;
     @FXML
-    private TableColumn<AppDeploymentConfiguration, String> virtual_machines_col;
+    private TableColumn<AppDeploymentConfiguration, String> virtualMachinesCol;
     @FXML
-    private TableColumn<AppDeploymentConfiguration, String> image_size_col;
+    private TableColumn<AppDeploymentConfiguration, String> imageSizeCol;
     @FXML
-    private TableColumn<AppDeploymentConfiguration, String> memory_col;
+    private TableColumn<AppDeploymentConfiguration, String> memoryCol;
     @FXML
     private TableColumn<AppDeploymentConfiguration, String> bandwidth_col;
     ObservableList<AppDeploymentConfiguration> listAppConf = FXCollections.observableArrayList(new AppDeploymentConfiguration("DC1", 5, 10000, 512, 1000));
@@ -88,7 +112,7 @@ public class MainConfigurationController {
     //Data center configuration
     @FXML
     private TableView<DataCentres> tableDataCentres = new TableView<>();
-    private final ObservableList<DataCentres> listDataCentres = FXCollections.observableArrayList(new DataCentres("DC1", 5, "x86", "Linux", "Xen", 0.1, 0.05, 0.1, 0.1, 1, listHWDetails, listServersDC));
+    private  ObservableList<DataCentres> listDataCentres = FXCollections.observableArrayList(new DataCentres("DC1", 5, "x86", "Linux", "Xen", 0.1, 0.05, 0.1, 0.1, 1, listHWDetails, listServersDC));
     @FXML
     private TableColumn<DataCentres, String> nameOfDataCenterCol;
     @FXML
@@ -152,20 +176,19 @@ public class MainConfigurationController {
     @FXML
     private TextField textExecutableInstructionLengthPrReq;
 
-
     //Main buttons
     @FXML
     private Button buttonSaveConfiguration;
     @FXML
     private Button buttonLoadConfiguration;
     @FXML
-    private Button buttonContinueConfiguration;
+    private Button buttonDoneConfiguration;
     @FXML
     private Button buttonCancelConfiguration;
 
-
     @FXML
     void initialize() {
+        parentButtons();
         //MainConfiguration
         initComboBoxes();
         initUserTable();
@@ -173,8 +196,30 @@ public class MainConfigurationController {
         //DataCenterConfiguration
         initDataCenterTable();
         initMainButtons();
-        //initAdvanced();
 
+      //  saveOriginalData();
+    }
+    private void parentButtons(){
+        buttonConfigureSimulation.setOnAction(event ->{
+            paneConfigurationSimulation.setVisible(true);
+            if(isPressedContinue) {
+                try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("continue.ser"))) {
+                    deserialize((RootObjectToSaveData) ois.readObject());
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                isPressedContinue = false;
+            }
+        });
+        buttonExit.setOnAction(event ->{
+            Platform.exit();
+        });
+        buttonRunSimulation.setOnAction(event -> {
+
+        });
+        buttonInternetCharacteristics.setOnAction(event -> {
+
+        });
     }
 
     private void initComboBoxes() {
@@ -192,85 +237,81 @@ public class MainConfigurationController {
     }
 
     private void initUserTable() {
+        nameColUs.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        regionColUs.setCellValueFactory(cellData -> cellData.getValue().regionProperty());
+        requestsPrUsPrHrColUs.setCellValueFactory(cellData -> cellData.getValue().requestsPrUsPrHrProperty());
+        dataSzPrRqColUs.setCellValueFactory(cellData -> cellData.getValue().dataSzPrRqProperty());
+        peakHrStartColUs.setCellValueFactory(cellData -> cellData.getValue().peakHrStartProperty());
+        peakHrEndColUs.setCellValueFactory(cellData -> cellData.getValue().peakHrEndProperty());
+        avgPkUsColUs.setCellValueFactory(cellData -> cellData.getValue().avgPkUsrsProperty());
+        avgPkOffUsColUs.setCellValueFactory(cellData -> cellData.getValue().avgPkOffUsrsProperty());
 
-        name_col_us.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        region_col_us.setCellValueFactory(cellData -> cellData.getValue().regionProperty());
-        requests_pr_us_pr_hr_col_us.setCellValueFactory(cellData -> cellData.getValue().requsetsPrUsPrHrProperty());
-        data_sz_pr_rq_col_us.setCellValueFactory(cellData -> cellData.getValue().dataSzPrRqProperty());
-        peak_hr_start_col_us.setCellValueFactory(cellData -> cellData.getValue().peakHrStartProperty());
-        peak_hr_end_col_us.setCellValueFactory(cellData -> cellData.getValue().peakHrEndProperty());
-        avg_pk_us_col_us.setCellValueFactory(cellData -> cellData.getValue().avgPkUsrsProperty());
-        avg_pk_off_us_col_us.setCellValueFactory(cellData -> cellData.getValue().avgPkOffUsrsProperty());
-
-        name_col_us.setCellFactory(TextFieldTableCell.forTableColumn());
+        nameColUs.setCellFactory(TextFieldTableCell.forTableColumn());
         ObservableList<String> countryOptions = FXCollections.observableArrayList("0", "1", "2", "3", "4", "5");
-        region_col_us.setCellFactory(ComboBoxTableCell.forTableColumn(countryOptions));
-        requests_pr_us_pr_hr_col_us.setCellFactory(TextFieldTableCell.forTableColumn());
-        data_sz_pr_rq_col_us.setCellFactory(TextFieldTableCell.forTableColumn());
-        peak_hr_start_col_us.setCellFactory(TextFieldTableCell.forTableColumn());
-        peak_hr_end_col_us.setCellFactory(TextFieldTableCell.forTableColumn());
-        avg_pk_us_col_us.setCellFactory(TextFieldTableCell.forTableColumn());
-        avg_pk_us_col_us.setCellFactory(TextFieldTableCell.forTableColumn());
+        regionColUs.setCellFactory(ComboBoxTableCell.forTableColumn(countryOptions));
+        requestsPrUsPrHrColUs.setCellFactory(TextFieldTableCell.forTableColumn());
+        dataSzPrRqColUs.setCellFactory(TextFieldTableCell.forTableColumn());
+        peakHrStartColUs.setCellFactory(TextFieldTableCell.forTableColumn());
+        peakHrEndColUs.setCellFactory(TextFieldTableCell.forTableColumn());
+        avgPkUsColUs.setCellFactory(TextFieldTableCell.forTableColumn());
+        avgPkUsColUs.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        name_col_us.setOnEditCommit(event -> {
+        nameColUs.setOnEditCommit(event -> {
             UserBases userBases = event.getRowValue();
             userBases.setName(event.getNewValue());
         });
-        region_col_us.setOnEditCommit(event -> {
+        regionColUs.setOnEditCommit(event -> {
             UserBases userBases = event.getRowValue();
             userBases.setRegion(Integer.parseInt(event.getNewValue()));
         });
-        requests_pr_us_pr_hr_col_us.setOnEditCommit(event -> {
+        requestsPrUsPrHrColUs.setOnEditCommit(event -> {
             UserBases userBases = event.getRowValue();
-            userBases.setRequsetsPrUsPrHr(Integer.parseInt(event.getNewValue()));
+            userBases.setRequestsPrUsPrHr(Integer.parseInt(event.getNewValue()));
         });
-        data_sz_pr_rq_col_us.setOnEditCommit(event -> {
+        dataSzPrRqColUs.setOnEditCommit(event -> {
             UserBases userBases = event.getRowValue();
             userBases.setDataSzPrRq(Integer.parseInt(event.getNewValue()));
         });
-        peak_hr_start_col_us.setOnEditCommit(event -> {
+        peakHrStartColUs.setOnEditCommit(event -> {
             UserBases userBases = event.getRowValue();
             userBases.setPeakHrStart(Integer.parseInt(event.getNewValue()));
         });
-        peak_hr_end_col_us.setOnEditCommit(event -> {
+        peakHrEndColUs.setOnEditCommit(event -> {
             UserBases userBases = event.getRowValue();
             userBases.setPeakHrEnd(Integer.parseInt(event.getNewValue()));
         });
-        avg_pk_us_col_us.setOnEditCommit(event -> {
+        avgPkUsColUs.setOnEditCommit(event -> {
             UserBases userBases = event.getRowValue();
             userBases.setAvgPkUsrs(Integer.parseInt(event.getNewValue()));
         });
-        avg_pk_off_us_col_us.setOnEditCommit(event -> {
+        avgPkOffUsColUs.setOnEditCommit(event -> {
             UserBases userBases = event.getRowValue();
             userBases.setAvgPkOffUsrs(Integer.parseInt(event.getNewValue()));
         });
 
         tableUserBases.setItems(listUserBases);
 
-
-        button_add_table_users.setOnAction(event -> {
+        buttonAddTableUsers.setOnAction(event -> {
             int countDataUsers = listUserBases.size() + 1;
             listUserBases.add(new UserBases("UB" + countDataUsers, 1, 60, 100, 3, 9, 1000, 100));
-
         });
-        button_remove_table_users.setOnAction(event -> listUserBases.remove(tableUserBases.getSelectionModel().getSelectedIndex()));
-
+        buttonRemoveTableUsers.setOnAction(event -> listUserBases.remove(tableUserBases.getSelectionModel().getSelectedIndex()));
     }
 
     private void initAppDeploymentConfTable() {
-        data_center_col.setCellValueFactory(cellData -> cellData.getValue().dataCenterProperty());
-        virtual_machines_col.setCellValueFactory(cellData -> cellData.getValue().virtualMachinesProperty());
-        image_size_col.setCellValueFactory(cellData -> cellData.getValue().imageSizeProperty());
-        memory_col.setCellValueFactory(cellData -> cellData.getValue().memoryProperty());
+        dataCenterCol.setCellValueFactory(cellData -> cellData.getValue().dataCenterProperty());
+        virtualMachinesCol.setCellValueFactory(cellData -> cellData.getValue().virtualMachinesProperty());
+        imageSizeCol.setCellValueFactory(cellData -> cellData.getValue().imageSizeProperty());
+        memoryCol.setCellValueFactory(cellData -> cellData.getValue().memoryProperty());
         bandwidth_col.setCellValueFactory(cellData -> cellData.getValue().bandwidthProperty());
 
-        updateDataCenterNames(); //data_center_col.setCellFactory
-        virtual_machines_col.setCellFactory(TextFieldTableCell.forTableColumn());
-        image_size_col.setCellFactory(TextFieldTableCell.forTableColumn());
-        memory_col.setCellFactory(TextFieldTableCell.forTableColumn());
+        updateDataCenterNames();
+        virtualMachinesCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        imageSizeCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        memoryCol.setCellFactory(TextFieldTableCell.forTableColumn());
         bandwidth_col.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        data_center_col.setOnEditCommit(event -> {
+        dataCenterCol.setOnEditCommit(event -> {
             AppDeploymentConfiguration appDeploymentConfTable = event.getRowValue();
             String newValue = event.getNewValue();
 
@@ -283,15 +324,15 @@ public class MainConfigurationController {
             }
             tableDataCentres.refresh(); // Обновляем таблицу для отображения текущего значения
         });
-        virtual_machines_col.setOnEditCommit(event -> {
+        virtualMachinesCol.setOnEditCommit(event -> {
             AppDeploymentConfiguration appDeploymentConfTable = event.getRowValue();
             appDeploymentConfTable.setVirtualMachines(Integer.parseInt(event.getNewValue()));
         });
-        image_size_col.setOnEditCommit(event -> {
+        imageSizeCol.setOnEditCommit(event -> {
             AppDeploymentConfiguration appDeploymentConfTable = event.getRowValue();
             appDeploymentConfTable.setImageSize(Integer.parseInt(event.getNewValue()));
         });
-        memory_col.setOnEditCommit(event -> {
+        memoryCol.setOnEditCommit(event -> {
             AppDeploymentConfiguration appDeploymentConfTable = event.getRowValue();
             appDeploymentConfTable.setMemory(Integer.parseInt(event.getNewValue()));
         });
@@ -302,7 +343,7 @@ public class MainConfigurationController {
 
         tableAppDeplConf.setItems(listAppConf);
 
-        button_add_application_conf_table.setOnAction(event -> {
+        buttonAddApplicationConfTable.setOnAction(event -> {
             if (listAppConf.getLast().getDataCenter().isEmpty()) {
                 alertError("Пожалуйста, завершите текущее заполнение, выбрав центр обработки данных");
                 return;
@@ -315,7 +356,7 @@ public class MainConfigurationController {
             }
             updateDataCenterNames();
         });
-        button_remove_application_conf_table.setOnAction(event -> listAppConf.remove(tableAppDeplConf.getSelectionModel().getSelectedIndex()));
+        buttonRemoveApplicationConfTable.setOnAction(event -> listAppConf.remove(tableAppDeplConf.getSelectionModel().getSelectedIndex()));
     }
 
     private boolean isNameExists(String newValue, AppDeploymentConfiguration currentRow) {
@@ -332,7 +373,7 @@ public class MainConfigurationController {
         for (DataCentres dataCentre : listDataCentres) {
             dataCenterNames.add(dataCentre.getName());
         }
-        data_center_col.setCellFactory(ComboBoxTableCell.forTableColumn(dataCenterNames));
+        dataCenterCol.setCellFactory(ComboBoxTableCell.forTableColumn(dataCenterNames));
         return dataCenterNames;
     }
 
@@ -370,7 +411,6 @@ public class MainConfigurationController {
                 }
             }
         });
-
         nameOfDataCenterCol.setOnEditCommit(event -> {
             boolean flag = false;
             DataCentres dataCentres = event.getRowValue();
@@ -446,7 +486,6 @@ public class MainConfigurationController {
                 initPhysicalHWDetailsTable(selectedDataCenter.getListHwDetailsOfDCS());
                 windowPhysicalHWDetails.setVisible(true);
             } else {
-                // Если ни одна строка не выбрана, скрыть другой AnchorPane
                 windowPhysicalHWDetails.setVisible(false);
             }
         });
@@ -472,7 +511,6 @@ public class MainConfigurationController {
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
-
                 if (item == null || empty) {
                     setText(null);
                     setGraphic(null);
@@ -523,7 +561,6 @@ public class MainConfigurationController {
             int countDataUsers = listDetails.size();
             listDetails.add(new PhysicalHWDetailsOfDC(countDataUsers, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED"));
             tablePhysicalHWDetailsOfDC.getSelectionModel().clearSelection();
-
             tableDataCentres.getSelectionModel().getSelectedItem().setPhysicalHWUnits(listDetails.size());
         });
         buttonRemoveHwDetail.setOnAction(event -> {
@@ -533,43 +570,34 @@ public class MainConfigurationController {
                 tablePhysicalHWDetailsOfDC.getSelectionModel().clearSelection();
                 tableDataCentres.getSelectionModel().getSelectedItem().setPhysicalHWUnits(listDetails.size());
             } else {
-                // Обработка случая, когда ничего не выбрано для удаления
+                alertError("Выберите элемент для удаления");
             }
         });
-
         buttonCopyHwDetail.setOnAction(event -> {
             if (tablePhysicalHWDetailsOfDC.getSelectionModel().getSelectedItem() != null) {
                 Spinner<Integer> spinner = new Spinner<>(1, 100, 1);
 
-                // Создаем диалоговое окно
                 Dialog<Integer> dialog = new Dialog<>();
                 dialog.setTitle("Количество копий");
                 dialog.setHeaderText(null);
                 dialog.setContentText("Введите количество копий:");
 
-                // Создаем текстовое поле для отображения содержимого
                 Label contentLabel = new Label("Выберите количество копий:");
 
-                // Создаем контейнер для текстового поля и спиннера
                 VBox vbox = new VBox(10);
                 vbox.getChildren().addAll(contentLabel, spinner);
                 vbox.setPadding(new Insets(20));
-                // Получаем панель диалога
                 DialogPane dialogPane = dialog.getDialogPane();
                 dialogPane.setPrefWidth(280);
                 dialogPane.setPrefHeight(50);
 
-                // Устанавливаем содержимое диалога
                 dialogPane.setContent(vbox);
 
-                // Создаем кнопки OK и Cancel
                 ButtonType okButtonType = new ButtonType("Подтвердить", ButtonBar.ButtonData.OK_DONE);
                 ButtonType cancelButtonType = new ButtonType("Отменить", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-                // Добавляем кнопки в панель кнопок
                 dialogPane.getButtonTypes().addAll(okButtonType, cancelButtonType);
 
-                // Устанавливаем результат диалога при нажатии на кнопку OK
                 dialog.setResultConverter(buttonType -> {
                     if (buttonType == okButtonType) {
                         // Возвращаем выбранное значение спиннера
@@ -577,13 +605,8 @@ public class MainConfigurationController {
                     }
                     return null; // Возвращаем null при нажатии на кнопку Cancel
                 });
-
-                // Отображаем диалоговое окно и ждем, пока пользователь закроет его
                 Optional<Integer> result = dialog.showAndWait();
-
-                // Обработка результата
                 result.ifPresent(copies -> {
-                    // Здесь вы можете использовать выбранное значение (copies)
                     PhysicalHWDetailsOfDC selectedRow = tablePhysicalHWDetailsOfDC.getSelectionModel().getSelectedItem();
                     for (int i = 0; i < copies; i++) {
                         int size = listDetails.size();
@@ -598,9 +621,7 @@ public class MainConfigurationController {
             }
         });
         buttonServersDCHwDetail.setOnAction(event1 -> {
-
             try {
-                // Создаем новый Stage
                 Stage stage = new Stage();
                 FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("servers-dc.fxml"));
                 Scene scene = new Scene(fxmlLoader.load());
@@ -612,37 +633,25 @@ public class MainConfigurationController {
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.showAndWait();
 
-                //   ServersDcController serversDcController1 = fxmlLoader.getController();
-//                        tableDataCentres.getSelectionModel().getSelectedItem().setListServersDC(serversDcController.getListServers());
-//                        listDataCentres.get(tableDataCentres.getSelectionModel().getSelectedIndex()).setListServersDC(serversDcController.getListServers());
                 ObservableList<ServersDC> updatedServersList = serversDcController.getListServers();
                 listDataCentres.get(tableDataCentres.getSelectionModel().getSelectedIndex()).setListServersDC(updatedServersList);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-
     }
-
-
     private void initMainButtons() {
         buttonSaveConfiguration.setOnAction(event -> {
             if (Integer.parseInt(textUsGroupingFactorInUB.getText()) < Integer.parseInt(textRequestGroupingFactorInDC.getText())) {
                 alertError("Коэффициент группировки пользователей в базах пользователей не может быть меньше, чем коэффициент группировки запросов в ЦОД");
                 return;
             }
-
             try {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Выберите место сохранения файла");
-
-                // Установка фильтра расширений, если нужно
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("SIM files (*.sim)", "*.sim"));
 
-                // Открытие диалогового окна для выбора файла
                 File file = fileChooser.showSaveDialog(new Stage());
-
                 if (file != null) {
                     String filePath = file.getPath();
                     if (!filePath.toLowerCase().endsWith(".sim")) {
@@ -650,42 +659,109 @@ public class MainConfigurationController {
                         filePath += ".sim";
                         file = new File(filePath);
                     }
-                   serialize(file.getPath());
+                    try (XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(filePath)))) {
+                        encoder.writeObject(serialize());
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
-
             }
+            new XMLWriter().saveToXML(listUserBases, listAppConf);
         });
         buttonLoadConfiguration.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Выберите файл для загрузки");
-
-            // Установка фильтра расширений файлов, если требуется
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("SIM файлы (*.sim)", "*.sim");
             fileChooser.getExtensionFilters().add(extFilter);
 
-            // Показать диалог выбора файла
             File file = fileChooser.showOpenDialog(new Stage());
-
             if (file != null) {
-                deserialize(file.getPath());
+                try (XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(file)))) {
+                    Object object = decoder.readObject();
+                    if (object instanceof RootObjectToSaveData) {
+                        deserialize((RootObjectToSaveData) object);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             } else {
                 System.err.println("Неверный тип объекта");
             }
         });
+        buttonDoneConfiguration.setOnAction(event -> {
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("continue.ser"))) {
+                oos.writeObject(serialize());
+                saveOriginalData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            isPressedContinue = true;
+            paneConfigurationSimulation.setVisible(false);
+        });
+        buttonCancelConfiguration.setOnAction(event -> {
+            paneConfigurationSimulation.setVisible(false);
+            windowPhysicalHWDetails.setVisible(false);
+
+            listUserBases = FXCollections.observableArrayList();
+            for (UserBases ub : originalListUserBases) {
+                listUserBases.add(ub.copy());
+            }
+
+            listAppConf = FXCollections.observableArrayList();
+            for (AppDeploymentConfiguration adc : originalListAppConf) {
+                listAppConf.add(adc.copy());
+            }
+
+            listHWDetails = FXCollections.observableArrayList();
+            for (PhysicalHWDetailsOfDC hw : originalListHwDetail) {
+                listHWDetails.add(hw.copy());
+            }
+
+            listDataCentres = FXCollections.observableArrayList();
+            for (DataCentres dc : originalListDataCentres) {
+                DataCentres dcCopy = dc.copy(dc.getListHwDetailsOfDCS(), dc.getListServersDC());
+                ObservableList<PhysicalHWDetailsOfDC> copiedHwDetails = FXCollections.observableArrayList();
+                for (PhysicalHWDetailsOfDC hw : dc.getListHwDetailsOfDCS()) {
+                    copiedHwDetails.add(hw.copy());
+                }
+                ObservableList<ServersDC> copiedServersDC = FXCollections.observableArrayList();
+                for (ServersDC server : dc.getListServersDC()) {
+                    copiedServersDC.add(server.copy());
+                }
+                dcCopy.setListHwDetailsOfDCS(copiedHwDetails);
+                dcCopy.setListServersDC(copiedServersDC);
+                listDataCentres.add(dcCopy);
+            }
+
+            tableUserBases.setItems(listUserBases);
+            tableAppDeplConf.setItems(listAppConf);
+            tableDataCentres.setItems(listDataCentres);
+            tablePhysicalHWDetailsOfDC.setItems(listHWDetails);
+
+            valueSimDurText.setText(originalValueSimDur);
+            comboboxSimulationDuration.setValue(originalSimDur);
+            comboboxBrokerPolicy.setValue(originalBrokerPolicy);
+            textUsGroupingFactorInUB.setText(originalUsGroupingFactorInUB);
+            textRequestGroupingFactorInDC.setText(originalRequestGroupingFactorInDC);
+            textExecutableInstructionLengthPrReq.setText(originalExecutableInstructionLengthPrReq);
+            comboBoxLBPolicy.setValue(originalLBPolicy);
+        });
     }
 
-
-    public static RootObjectToSaveData loadFromFile(String filename) {
-        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(filename))) {
-            return (RootObjectToSaveData) inputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
+    private void saveOriginalData() {
+        originalListUserBases = FXCollections.observableArrayList(listUserBases);
+        originalListAppConf = FXCollections.observableArrayList(listAppConf);
+        originalListDataCentres = FXCollections.observableArrayList(listDataCentres);
+        originalValueSimDur = valueSimDurText.getText();
+        originalSimDur = comboboxSimulationDuration.getValue();
+        originalBrokerPolicy = comboboxBrokerPolicy.getValue();
+        originalUsGroupingFactorInUB = textUsGroupingFactorInUB.getText();
+        originalRequestGroupingFactorInDC = textRequestGroupingFactorInDC.getText();
+        originalExecutableInstructionLengthPrReq = "100";
+        originalLBPolicy = comboBoxLBPolicy.getValue();
     }
-
     private void alertError(String contentText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка");
@@ -694,114 +770,83 @@ public class MainConfigurationController {
         alert.showAndWait();
     }
 
-    public void serialize(String filePath) {
-        try (XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(filePath)))) {
-            // Запись объекта в XML
-
-        RootObjectToSaveData save = new RootObjectToSaveData();
-        SerializableList<UserBaseData> listUsBs = new SerializableList<>();
-        for (int i = 0; i < listUserBases.size(); i++) {
-            listUsBs.add(new UserBaseData(listUserBases.get(i).getName(), listUserBases.get(i).getRegion(), listUserBases.get(i).getRequsetsPrUsPrHr(), listUserBases.get(i).getDataSzPrRq(), listUserBases.get(i).getPeakHrStart(), listUserBases.get(i).getPeakHrEnd(), listUserBases.get(i).getAvgPkUsrs(), listUserBases.get(i).getAvgPkOffUsrs()));
-        }
-
-        SerializableList<AppDeploymentConfigurationData> listApCon = new SerializableList<>();
-        for (int i = 0; i < listAppConf.size(); i++) {
-            listApCon.add(new AppDeploymentConfigurationData(listAppConf.get(i).getDataCenter(), listAppConf.get(i).getVirtualMachines(), listAppConf.get(i).getImageSize(), listAppConf.get(i).getMemory(), listAppConf.get(i).getBandwidth()));
-        }
-
-        SerializableList<DataCentresData> listDC = new SerializableList<>();
-        for (int i = 0; i < listDataCentres.size(); i++) {
-            SerializableList<PhysicalHWDetailsOfDCData> listDetails = new SerializableList<>();
-            SerializableList<ServersDCData> listServerDC = new SerializableList<>();
-            for (int j = 0; j < listDataCentres.get(i).getListHwDetailsOfDCS().size(); j++) {
-                listDetails.add(new PhysicalHWDetailsOfDCData(listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getId(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getMemory(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getStorage(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getAvailableBandwidth(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getNumOfProcessors(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getProcessorSpeed(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getVMPolicy()));
+        public RootObjectToSaveData serialize() {
+            RootObjectToSaveData save = new RootObjectToSaveData();
+            SerializableList<UserBaseData> listUsBs = new SerializableList<>();
+            for (int i = 0; i < listUserBases.size(); i++) {
+                listUsBs.add(new UserBaseData(listUserBases.get(i).getName(), listUserBases.get(i).getRegion(), listUserBases.get(i).getRequestsPrUsPrHr(), listUserBases.get(i).getDataSzPrRq(), listUserBases.get(i).getPeakHrStart(), listUserBases.get(i).getPeakHrEnd(), listUserBases.get(i).getAvgPkUsrs(), listUserBases.get(i).getAvgPkOffUsrs()));
             }
-            for (int j = 0; j < listDataCentres.get(i).getListServersDC().size(); j++) {
-                listServerDC.add(new ServersDCData(listDataCentres.get(i).getListServersDC().get(j).getName(),listDataCentres.get(i).getListServersDC().get(j).getPrefix(), listDataCentres.get(i).getListServersDC().get(j).getCount(), listDataCentres.get(i).getListServersDC().get(j).getCode()));
+            SerializableList<AppDeploymentConfigurationData> listApCon = new SerializableList<>();
+            for (int i = 0; i < listAppConf.size(); i++) {
+                listApCon.add(new AppDeploymentConfigurationData(listAppConf.get(i).getDataCenter(), listAppConf.get(i).getVirtualMachines(), listAppConf.get(i).getImageSize(), listAppConf.get(i).getMemory(), listAppConf.get(i).getBandwidth()));
             }
-            listDC.add(new DataCentresData(listDataCentres.get(i).getName(), listDataCentres.get(i).getRegion(), listDataCentres.get(i).getArch(), listDataCentres.get(i).getOS(), listDataCentres.get(i).getVMM(), listDataCentres.get(i).getCostPerVm(), listDataCentres.get(i).getMemoryCost(), listDataCentres.get(i).getStorageCost(), listDataCentres.get(i).getDataTransferCost(), listDataCentres.get(i).getPhysicalHWUnits(), listDetails, listServerDC));
+            SerializableList<DataCentresData> listDC = new SerializableList<>();
+            for (int i = 0; i < listDataCentres.size(); i++) {
+                SerializableList<PhysicalHWDetailsOfDCData> listDetails = new SerializableList<>();
+                SerializableList<ServersDCData> listServerDC = new SerializableList<>();
+                for (int j = 0; j < listDataCentres.get(i).getListHwDetailsOfDCS().size(); j++) {
+                    listDetails.add(new PhysicalHWDetailsOfDCData(listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getId(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getMemory(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getStorage(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getAvailableBandwidth(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getNumOfProcessors(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getProcessorSpeed(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getVMPolicy()));
+                }
+                for (int j = 0; j < listDataCentres.get(i).getListServersDC().size(); j++) {
+                    listServerDC.add(new ServersDCData(listDataCentres.get(i).getListServersDC().get(j).getName(), listDataCentres.get(i).getListServersDC().get(j).getPrefix(), listDataCentres.get(i).getListServersDC().get(j).getCount(), listDataCentres.get(i).getListServersDC().get(j).getCode()));
+                }
+                listDC.add(new DataCentresData(listDataCentres.get(i).getName(), listDataCentres.get(i).getRegion(), listDataCentres.get(i).getArch(), listDataCentres.get(i).getOS(), listDataCentres.get(i).getVMM(), listDataCentres.get(i).getCostPerVm(), listDataCentres.get(i).getMemoryCost(), listDataCentres.get(i).getStorageCost(), listDataCentres.get(i).getDataTransferCost(), listDataCentres.get(i).getPhysicalHWUnits(), listDetails, listServerDC));
+            }
+            save.setAdvancedData(new AdvancedData(Integer.parseInt(textUsGroupingFactorInUB.getText()), Integer.parseInt(textRequestGroupingFactorInDC.getText()), Integer.parseInt(textExecutableInstructionLengthPrReq.getText()), comboBoxLBPolicy.getValue()));
+
+            save.setSimulationDuration(comboboxSimulationDuration.getValue());
+            save.setValueSimulationDuration(Double.parseDouble(valueSimDurText.getText()));
+            save.setServiceBrokerPolicy(comboboxBrokerPolicy.getValue());
+
+            save.setListUserBases(listUsBs);
+            save.setListAppDeploymentConf(listApCon);
+            save.setListDataCentres(listDC);
+            return save;
         }
-        save.setAdvancedData(new AdvancedData(Integer.parseInt(textUsGroupingFactorInUB.getText()), Integer.parseInt(textRequestGroupingFactorInDC.getText()), Integer.parseInt(textExecutableInstructionLengthPrReq.getText()), comboBoxLBPolicy.getValue()));
 
-
-        save.setSimulationDuration(comboboxSimulationDuration.getValue());
-        save.setValueSimulationDuration(Double.parseDouble(valueSimDurText.getText()));
-        save.setServiceBrokerPolicy(comboboxBrokerPolicy.getValue());
-
-        save.setListUserBases(listUsBs);
-        save.setListAppDeploymentConf(listApCon);
-        save.setListDataCentres(listDC);
-
-        encoder.writeObject(save);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void deserialize(String filePath) {
+    private void deserialize(RootObjectToSaveData loadedData) {
         listDataCentres.clear();
         listAppConf.clear();
         listUserBases.clear();
 
-        try (XMLDecoder decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream(filePath)))) {
-            // Десериализация объекта из XML
-            Object object = decoder.readObject();
-
-            // Проверяем, что объект является нужным типом
-            if (object instanceof RootObjectToSaveData) {
-                // Приводим объект к нужному типу
-                RootObjectToSaveData loadedData = (RootObjectToSaveData) object;
-                // Делаем что-то с вашим объектом
-                // Например, выводим его на консоль
-
-
-                for (int i = 0; i < loadedData.getListUserBases().size(); i++) {
-                    listUserBases.add(new UserBases(loadedData.getListUserBases().get(i).getName(), loadedData.getListUserBases().get(i).getRegion(), loadedData.getListUserBases().get(i).getRequsetsPrUsPrHr(), loadedData.getListUserBases().get(i).getDataSzPrRq(), loadedData.getListUserBases().get(i).getPeakHrStart(), loadedData.getListUserBases().get(i).getPeakHrEnd(), loadedData.getListUserBases().get(i).getAvgPkUsrs(), loadedData.getListUserBases().get(i).getAvgPkOffUsrs()));
-                }
-
-                for (int i = 0; i < loadedData.getListAppDeploymentConf().size(); i++) {
-                    listAppConf.add(new AppDeploymentConfiguration(loadedData.getListAppDeploymentConf().get(i).getDataCenter(), loadedData.getListAppDeploymentConf().get(i).getVirtualMachines(), loadedData.getListAppDeploymentConf().get(i).getImageSize(), loadedData.getListAppDeploymentConf().get(i).getMemory(), loadedData.getListAppDeploymentConf().get(i).getBandwidth()));
-                }
-
-                for (int i = 0; i < loadedData.getListDataCentres().size(); i++) {
-                    ObservableList<PhysicalHWDetailsOfDC> listDetails = FXCollections.observableArrayList();
-                    ObservableList<ServersDC> listServersDc = FXCollections.observableArrayList();
-                    ArrayList<PhysicalHWDetailsOfDCData> listLoadedDetails = loadedData.getListDataCentres().get(i).getListHwDetailsOfDCS();
-                    ArrayList<ServersDCData> listLoadedServersDC = loadedData.getListDataCentres().get(i).getListServersDC();
-                    for (int j = 0; j < loadedData.getListDataCentres().get(i).getListHwDetailsOfDCS().size(); j++) {
-                        listDetails.add(new PhysicalHWDetailsOfDC(listLoadedDetails.get(j).getId(), listLoadedDetails.get(j).getMemory(), listLoadedDetails.get(j).getStorage(), listLoadedDetails.get(j).getAvailableBandwidth(), listLoadedDetails.get(j).getNumOfProcessors(), listLoadedDetails.get(j).getProcessorSpeed(), listLoadedDetails.get(j).getVMPolicy()));
-                    }
-                    for (int j = 0; j < loadedData.getListDataCentres().get(i).getListServersDC().size(); j++) {
-                        listServersDc.add(new ServersDC(listLoadedServersDC.get(j).getName(),listLoadedServersDC.get(j).getPrefix(), listLoadedServersDC.get(j).getCount(), listLoadedServersDC.get(j).getCode()));
-                    }
-
-                    List<DataCentresData> list = loadedData.getListDataCentres();
-                    listDataCentres.add(new DataCentres(list.get(i).getName(), list.get(i).getRegion(), list.get(i).getArch(), list.get(i).getOS(),
-                            list.get(i).getVMM(), list.get(i).getCostPerVm(), list.get(i).getMemoryCost(), list.get(i).getStorageCost(),
-                            list.get(i).getDataTransferCost(), list.get(i).getPhysicalHWUnits(), listDetails, listServersDc));
-                }
-                AdvancedData advancedData = loadedData.getAdvancedData();
-                textExecutableInstructionLengthPrReq.setText(String.valueOf(advancedData.getExecutableInstructionLengthPrReq()));
-                textUsGroupingFactorInUB.setText(String.valueOf(advancedData.getUsGroupingFactorInUB()));
-                textRequestGroupingFactorInDC.setText(String.valueOf(advancedData.getRequestGroupingFactorInDC()));
-                comboBoxLBPolicy.setValue(advancedData.getLBPolicy());
-
-                valueSimDurText.setText(String.valueOf(loadedData.getValueSimulationDuration()));
-                comboboxSimulationDuration.setValue(String.valueOf(loadedData.getSimulationDuration()));
-                comboboxBrokerPolicy.setValue(String.valueOf(loadedData.getServiceBrokerPolicy()));
-
-                tableDataCentres.refresh();
-                tableAppDeplConf.refresh();
-                tableUserBases.refresh();
+        for (int i = 0; i < loadedData.getListUserBases().size(); i++) {
+            listUserBases.add(new UserBases(loadedData.getListUserBases().get(i).getName(), loadedData.getListUserBases().get(i).getRegion(), loadedData.getListUserBases().get(i).getRequsetsPrUsPrHr(), loadedData.getListUserBases().get(i).getDataSzPrRq(), loadedData.getListUserBases().get(i).getPeakHrStart(), loadedData.getListUserBases().get(i).getPeakHrEnd(), loadedData.getListUserBases().get(i).getAvgPkUsrs(), loadedData.getListUserBases().get(i).getAvgPkOffUsrs()));
+        }
+        for (int i = 0; i < loadedData.getListAppDeploymentConf().size(); i++) {
+            listAppConf.add(new AppDeploymentConfiguration(loadedData.getListAppDeploymentConf().get(i).getDataCenter(), loadedData.getListAppDeploymentConf().get(i).getVirtualMachines(), loadedData.getListAppDeploymentConf().get(i).getImageSize(), loadedData.getListAppDeploymentConf().get(i).getMemory(), loadedData.getListAppDeploymentConf().get(i).getBandwidth()));
+        }
+        for (int i = 0; i < loadedData.getListDataCentres().size(); i++) {
+            ObservableList<PhysicalHWDetailsOfDC> listDetails = FXCollections.observableArrayList();
+            ObservableList<ServersDC> listServersDc = FXCollections.observableArrayList();
+            ArrayList<PhysicalHWDetailsOfDCData> listLoadedDetails = loadedData.getListDataCentres().get(i).getListHwDetailsOfDCS();
+            ArrayList<ServersDCData> listLoadedServersDC = loadedData.getListDataCentres().get(i).getListServersDC();
+            for (int j = 0; j < loadedData.getListDataCentres().get(i).getListHwDetailsOfDCS().size(); j++) {
+                listDetails.add(new PhysicalHWDetailsOfDC(listLoadedDetails.get(j).getId(), listLoadedDetails.get(j).getMemory(), listLoadedDetails.get(j).getStorage(), listLoadedDetails.get(j).getAvailableBandwidth(), listLoadedDetails.get(j).getNumOfProcessors(), listLoadedDetails.get(j).getProcessorSpeed(), listLoadedDetails.get(j).getVMPolicy()));
+            }
+            for (int j = 0; j < loadedData.getListDataCentres().get(i).getListServersDC().size(); j++) {
+                listServersDc.add(new ServersDC(listLoadedServersDC.get(j).getName(), listLoadedServersDC.get(j).getPrefix(), listLoadedServersDC.get(j).getCount(), listLoadedServersDC.get(j).getCode()));
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            List<DataCentresData> list = loadedData.getListDataCentres();
+            listDataCentres.add(new DataCentres(list.get(i).getName(), list.get(i).getRegion(), list.get(i).getArch(), list.get(i).getOS(),
+                    list.get(i).getVMM(), list.get(i).getCostPerVm(), list.get(i).getMemoryCost(), list.get(i).getStorageCost(),
+                    list.get(i).getDataTransferCost(), list.get(i).getPhysicalHWUnits(), listDetails, listServersDc));
         }
+        AdvancedData advancedData = loadedData.getAdvancedData();
+        textExecutableInstructionLengthPrReq.setText(String.valueOf(advancedData.getExecutableInstructionLengthPrReq()));
+        textUsGroupingFactorInUB.setText(String.valueOf(advancedData.getUsGroupingFactorInUB()));
+        textRequestGroupingFactorInDC.setText(String.valueOf(advancedData.getRequestGroupingFactorInDC()));
+        comboBoxLBPolicy.setValue(advancedData.getLBPolicy());
+
+        valueSimDurText.setText(String.valueOf(loadedData.getValueSimulationDuration()));
+        comboboxSimulationDuration.setValue(String.valueOf(loadedData.getSimulationDuration()));
+        comboboxBrokerPolicy.setValue(String.valueOf(loadedData.getServiceBrokerPolicy()));
+
+        tableDataCentres.refresh();
+        tableAppDeplConf.refresh();
+        tableUserBases.refresh();
     }
+
+
+    //----------------------------------INTERNET CHARACTERISTICS------------------------------------------------------
 }
-
-
-
-
-

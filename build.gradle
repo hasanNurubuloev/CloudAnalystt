@@ -37,19 +37,26 @@ javafx {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-    implementation "javax.xml.bind:jaxb-api:2.3.1"
-    implementation "org.glassfish.jaxb:jaxb-runtime:4.0.5"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    testImplementation 'org.testfx:testfx-core:4.0.16-alpha'
+    testImplementation 'org.testfx:testfx-junit5:4.0.16-alpha'
+
+
+
 //    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.0'
     implementation 'jakarta.activation:jakarta.activation-api:2.0.0' // Выберите подходящую версию
+    implementation 'org.jdom:jdom2:2.0.6.1'
+    implementation 'com.sun.xml.bind:jaxb-impl:2.3.3'
 
 }
 
 test {
+    jvmArgs '--add-opens', 'javafx.graphics/com.sun.javafx.application=org.testfx'
     useJUnitPlatform()
 }
 

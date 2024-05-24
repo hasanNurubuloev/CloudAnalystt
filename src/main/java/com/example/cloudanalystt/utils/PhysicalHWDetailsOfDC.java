@@ -13,6 +13,10 @@ public class PhysicalHWDetailsOfDC  implements Serializable {
     private SimpleStringProperty processorSpeed;
     private SimpleStringProperty VMPolicy;
 
+    public PhysicalHWDetailsOfDC copy() {
+        return new PhysicalHWDetailsOfDC(Integer.parseInt(this.id.get()), Integer.parseInt(this.memory.get()), Integer.parseInt(this.storage.get()), Integer.parseInt(this.availableBandwidth.get()), Integer.parseInt(this.numOfProcessors.get()), Integer.parseInt(this.processorSpeed.get()), this.VMPolicy.get());
+    }
+
     public PhysicalHWDetailsOfDC(int id, int memory, int storage, int availableBandwidth, int numOfProcessors, int processorSpeed, String VMPolicy) {
         this.id = new SimpleStringProperty(String.valueOf(id));
         this.memory =new SimpleStringProperty(String.valueOf(memory));

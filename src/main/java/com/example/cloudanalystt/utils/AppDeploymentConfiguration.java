@@ -11,6 +11,10 @@ public class AppDeploymentConfiguration implements Serializable  {
     private SimpleStringProperty memory;
     private SimpleStringProperty bandwidth;
 
+    public AppDeploymentConfiguration copy() {
+        return new AppDeploymentConfiguration(this.dataCenter.get(), Integer.parseInt(this.virtualMachines.get()), Integer.parseInt(this.imageSize.get()), Integer.parseInt(this.memory.get()), Integer.parseInt(this.bandwidth.get()));
+    }
+
     public AppDeploymentConfiguration(String dataCenter, int virtualMachines, int imageSize, int memory, int bandwidth) {
         this.dataCenter = new SimpleStringProperty(dataCenter);
         this.virtualMachines = new SimpleStringProperty(String.valueOf(virtualMachines));

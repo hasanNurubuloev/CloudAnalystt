@@ -11,24 +11,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="734.0" prefWidth="1240.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cloudanalystt.MainConfigurationController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="734.0" prefWidth="1240.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cloudanalystt.ui.MainConfigurationController">
     <children>
-        <Button layoutX="251.0" layoutY="31.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="305.0" text="Определение характеристик интернета" textAlignment="CENTER" wrapText="true">
-            <font>
-                <Font size="12.0" />
-            </font>
-        </Button>
-        <Button layoutX="570.0" layoutY="31.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="185.0" text="Запуск моделирования" textAlignment="CENTER" wrapText="true">
-            <font>
-                <Font size="12.0" />
-            </font>
-        </Button>
-        <Button layoutX="763.0" layoutY="32.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="131.0" text="Выход">
-            <font>
-                <Font size="12.0" />
-            </font>
-        </Button>
-        <AnchorPane id="pane_configure_simulation" layoutX="25.0" layoutY="73.0" prefHeight="445.0" prefWidth="774.0">
+        <AnchorPane id="pane_configure_simulation" fx:id="paneConfigurationSimulation" layoutX="29.0" layoutY="72.0" prefHeight="616.0" prefWidth="1170.0" visible="false" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="72.0">
             <children>
                 <TabPane layoutX="13.0" layoutY="9.0" prefHeight="550.0" prefWidth="1139.0" tabClosingPolicy="UNAVAILABLE">
                     <tabs>
@@ -42,14 +27,14 @@
                                         <Label layoutX="15.0" layoutY="62.0" prefHeight="32.0" prefWidth="115.0" text="Базы пользователей" wrapText="true" />
                                         <TableView id="table_users" fx:id="tableUserBases" editable="true" layoutX="140.0" layoutY="62.0" prefHeight="189.0" prefWidth="837.0">
                                             <columns>
-                                                <TableColumn id="name_col_us" fx:id="name_col_us" prefWidth="86.0" text="Название" />
-                                                <TableColumn id="region_col_us" fx:id="region_col_us" maxWidth="93.0" prefWidth="68.0" resizable="false" text="Регион" />
-                                                <TableColumn id="requsets_pr_us_pr_hr" fx:id="requests_pr_us_pr_hr_col_us" prefWidth="111.0" text="Количество&#10;запросов&#10;пользователя&#10;в час" />
-                                                <TableColumn id="data_sz_pr_rq_col_us" fx:id="data_sz_pr_rq_col_us" prefWidth="96.0" text="Размер &#10;данных &#10;на запрос&#10;(в байтах)" />
-                                                <TableColumn id="peak_hr_start_col_us" fx:id="peak_hr_start_col_us" minWidth="0.0" prefWidth="93.0" text="Начало &#10;пикового &#10;часа&#10;(GMT)" />
-                                                <TableColumn id="peak_hr_end_col_us" fx:id="peak_hr_end_col_us" prefWidth="82.0" text="Конец &#10;пикового &#10;часа&#10;(GMT)" />
-                                                <TableColumn id="avg_pk_us_col_us" fx:id="avg_pk_us_col_us" prefWidth="133.0" text="Среднее&#10;количество &#10;пользователей &#10;в пик&#10;" />
-                                                <TableColumn id="avg_pk_off_us_col_us" fx:id="avg_pk_off_us_col_us" prefWidth="167.0" text="Среднее&#10;количество &#10;пользователей &#10;не в пик" />
+                                                <TableColumn id="name_col_us" fx:id="nameColUs" prefWidth="86.0" text="Название" />
+                                                <TableColumn id="region_col_us" fx:id="regionColUs" maxWidth="93.0" prefWidth="68.0" resizable="false" text="Регион" />
+                                                <TableColumn id="requsets_pr_us_pr_hr" fx:id="requestsPrUsPrHrColUs" prefWidth="111.0" text="Количество&#10;запросов&#10;пользователя&#10;в час" />
+                                                <TableColumn id="data_sz_pr_rq_col_us" fx:id="dataSzPrRqColUs" prefWidth="96.0" text="Размер &#10;данных &#10;на запрос&#10;(в байтах)" />
+                                                <TableColumn id="peak_hr_start_col_us" fx:id="peakHrStartColUs" minWidth="0.0" prefWidth="93.0" text="Начало &#10;пикового &#10;часа&#10;(GMT)" />
+                                                <TableColumn id="peak_hr_end_col_us" fx:id="peakHrEndColUs" prefWidth="82.0" text="Конец &#10;пикового &#10;часа&#10;(GMT)" />
+                                                <TableColumn id="avg_pk_us_col_us" fx:id="avgPkUsColUs" prefWidth="133.0" text="Среднее&#10;количество &#10;пользователей &#10;в пик&#10;" />
+                                                <TableColumn id="avg_pk_off_us_col_us" fx:id="avgPkOffUsColUs" prefWidth="167.0" text="Среднее&#10;количество &#10;пользователей &#10;не в пик" />
                                             </columns>
                                         </TableView>
                                         <Label layoutX="17.0" layoutY="300.0" prefHeight="55.0" prefWidth="110.0" text="Конфигурация развертывания приложения" wrapText="true" />
@@ -57,17 +42,17 @@
                                         <ComboBox fx:id="comboboxBrokerPolicy" layoutX="303.0" layoutY="261.0" prefHeight="24.0" prefWidth="170.0" />
                                         <TableView id="table_app_deployment_conf" fx:id="tableAppDeplConf" editable="true" layoutX="140.0" layoutY="309.0" prefHeight="191.0" prefWidth="841.0" style="-fx-background-color: #f2f2f2;">
                                             <columns>
-                                                <TableColumn id="data_center_col" fx:id="data_center_col" prefWidth="165.0" text="ЦОД" />
-                                                <TableColumn id="virtual_machines_col" fx:id="virtual_machines_col" prefWidth="190.0" text="Количество&#10;виртуальных&#10;машин" />
-                                                <TableColumn id="image_size_col" fx:id="image_size_col" prefWidth="149.0" text="Размер &#10;изображения" />
-                                                <TableColumn id="memory_col" fx:id="memory_col" prefWidth="153.0" text="Память" />
+                                                <TableColumn id="data_center_col" fx:id="dataCenterCol" prefWidth="165.0" text="ЦОД" />
+                                                <TableColumn id="virtual_machines_col" fx:id="virtualMachinesCol" prefWidth="190.0" text="Количество&#10;виртуальных&#10;машин" />
+                                                <TableColumn id="image_size_col" fx:id="imageSizeCol" prefWidth="149.0" text="Размер &#10;изображения" />
+                                                <TableColumn id="memory_col" fx:id="memoryCol" prefWidth="153.0" text="Память" />
                                                 <TableColumn id="bandwidth_col" fx:id="bandwidth_col" prefWidth="183.0" text="Полоса &#10;пропускания &#10;сети" />
                                             </columns>
                                         </TableView>
-                                        <Button id="button_add_table_users" fx:id="button_add_table_users" layoutX="991.0" layoutY="125.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="84.0" text="Добавить" />
-                                        <Button id="button_remove_table_users" fx:id="button_remove_table_users" layoutX="991.0" layoutY="171.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Удалить" />
-                                        <Button fx:id="button_add_application_conf_table" layoutX="991.0" layoutY="327.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="84.0" text="Добавить" />
-                                        <Button fx:id="button_remove_application_conf_table" layoutX="991.0" layoutY="373.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Удалить" />
+                                        <Button id="button_add_table_users" fx:id="buttonAddTableUsers" layoutX="991.0" layoutY="125.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="84.0" text="Добавить" />
+                                        <Button id="button_remove_table_users" fx:id="buttonRemoveTableUsers" layoutX="991.0" layoutY="171.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Удалить" />
+                                        <Button fx:id="buttonAddApplicationConfTable" layoutX="991.0" layoutY="327.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="84.0" text="Добавить" />
+                                        <Button fx:id="buttonRemoveApplicationConfTable" layoutX="991.0" layoutY="373.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Удалить" />
                                     </children>
                                 </AnchorPane>
                             </content>
@@ -139,16 +124,89 @@
                         </Tab>
                     </tabs>
                 </TabPane>
+              <Button id="button_save_configuration_main" fx:id="buttonSaveConfiguration" layoutX="592.0" layoutY="559.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="202.0" text="Сохранить конфигурацию" />
+              <Button id="button_continue_main" fx:id="buttonDoneConfiguration" layoutX="826.0" layoutY="559.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="131.0" text="Продолжить" />
+              <Button id="button_load_configuration_main" fx:id="buttonLoadConfiguration" layoutX="362.0" layoutY="559.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="195.0" text="Загрузить конфигурацию" />
+              <Button id="button_cancel_configuration_main" fx:id="buttonCancelConfiguration" layoutX="196.0" layoutY="559.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="131.0" text="Отменить" />
             </children>
         </AnchorPane>
-        <Button id="button_cancel_configuration_main" fx:id="buttonCancelConfiguration" layoutX="146.0" layoutY="655.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="131.0" text="Отменить" />
-        <Button id="button_save_configuration_main" fx:id="buttonSaveConfiguration" layoutX="526.0" layoutY="656.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="202.0" text="Сохранить конфигурацию" />
-        <Button id="button_continue_main" fx:id="buttonContinueConfiguration" layoutX="746.0" layoutY="656.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="131.0" text="Продолжить" />
-        <Button id="button_load_configuration_main" fx:id="buttonLoadConfiguration" layoutX="306.0" layoutY="656.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="195.0" text="Загрузить конфигурацию" />
-        <Button layoutX="25.0" layoutY="31.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="209.0" text="Настройка моделирования" textAlignment="CENTER" wrapText="true">
+        <Button id="button_configure_simulation" fx:id="buttonConfigureSimulation" layoutX="25.0" layoutY="31.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="209.0" text="Настройка моделирования" textAlignment="CENTER" wrapText="true">
             <font>
                 <Font size="12.0" />
             </font>
         </Button>
+        <Button id="button_internet_characteristics" fx:id="buttonInternetCharacteristics" layoutX="251.0" layoutY="31.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="305.0" text="Определение характеристик интернета" textAlignment="CENTER" wrapText="true">
+            <font>
+                <Font size="12.0" />
+            </font>
+        </Button>
+        <Button id="button_run_simulation" fx:id="buttonRunSimulation" layoutX="570.0" layoutY="31.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="185.0" text="Запуск моделирования" textAlignment="CENTER" wrapText="true">
+            <font>
+                <Font size="12.0" />
+            </font>
+        </Button>
+        <Button id="button_exit" fx:id="buttonExit" layoutX="763.0" layoutY="32.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="131.0" text="Выход">
+            <font>
+                <Font size="12.0" />
+            </font>
+        </Button>
+      <AnchorPane id="pane_internet_characteristics" layoutX="30.0" layoutY="72.0" prefHeight="649.0" prefWidth="990.0" visible="false">
+         <children>
+            <Label layoutX="37.0" prefHeight="51.0" prefWidth="395.0" text="Настройка характеристик интернета">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="37.0" layoutY="51.0" text="Используйте эту страницу для настройки характеристик интернета">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="37.0" layoutY="84.0" text="Матрица задержки">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="37.0" layoutY="108.0" text="Задержка передачи между регионами. Единицы в миллисекундах">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TableView id="table_delay_matrix" editable="true" layoutX="37.0" layoutY="133.0" prefHeight="150.0" prefWidth="727.0">
+              <columns>
+                <TableColumn prefWidth="184.0" text="Region/Region" />
+                <TableColumn prefWidth="97.0" text="0" />
+                  <TableColumn prefWidth="91.0" text="1" />
+                  <TableColumn prefWidth="89.0" text="2" />
+                  <TableColumn prefWidth="87.0" text="3" />
+                  <TableColumn prefWidth="88.0" text="4" />
+                  <TableColumn prefWidth="90.0" text="5" />
+              </columns>
+            </TableView>
+            <Label layoutX="37.0" layoutY="299.0" text="Матрица пропускной способности">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="37.0" layoutY="333.0" text="Доступная полоса пропускания между регионами для моделируемого приложения. Единицы в Мбит/с">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TableView id="table_bantwidth_matrix" editable="true" layoutX="37.0" layoutY="360.0" prefHeight="150.0" prefWidth="727.0">
+               <columns>
+                  <TableColumn prefWidth="184.0" text="Region/Region" />
+                  <TableColumn prefWidth="97.0" text="0" />
+                  <TableColumn prefWidth="91.0" text="1" />
+                  <TableColumn prefWidth="89.0" text="2" />
+                  <TableColumn prefWidth="87.0" text="3" />
+                  <TableColumn prefWidth="88.0" text="4" />
+                  <TableColumn prefWidth="90.0" text="5" />
+               </columns>
+            </TableView>
+            <Button id="button_done_internet" layoutX="272.0" layoutY="574.0" mnemonicParsing="false" text="Продолжить" />
+            <Button id="button_cancel_internet" layoutX="401.0" layoutY="574.0" mnemonicParsing="false" text="Отменить" />
+         </children>
+      </AnchorPane>
     </children>
 </AnchorPane>
