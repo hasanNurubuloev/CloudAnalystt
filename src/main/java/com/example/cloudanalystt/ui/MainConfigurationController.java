@@ -2,10 +2,10 @@ package com.example.cloudanalystt.ui;
 
 import com.example.cloudanalystt.HelloApplication;
 import com.example.cloudanalystt.RootObjectToSaveData;
+import com.example.cloudanalystt.RootObjectToSaveInternetCharacteristics;
 import com.example.cloudanalystt.XMLWriter;
 import com.example.cloudanalystt.utils.*;
 import com.example.cloudanalystt.utils.utilsForSerializable.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -46,11 +46,11 @@ public class MainConfigurationController {
 
     boolean isPressedContinue = false;
 
-    private ObservableList<UserBases> originalListUserBases  = FXCollections.observableArrayList(new UserBases("UB1", 1, 60, 100, 3, 9, 1000, 100));
-    private ObservableList<AppDeploymentConfiguration> originalListAppConf  = FXCollections.observableArrayList(new AppDeploymentConfiguration("DC1", 5, 10000, 512, 1000));
-    private final ObservableList<PhysicalHWDetailsOfDC> originalListHwDetail= FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED"));
+    private ObservableList<UserBases> originalListUserBases = FXCollections.observableArrayList(new UserBases("UB1", 1, 60, 100, 3, 9, 1000, 100));
+    private ObservableList<AppDeploymentConfiguration> originalListAppConf = FXCollections.observableArrayList(new AppDeploymentConfiguration("DC1", 5, 10000, 512, 1000));
+    private final ObservableList<PhysicalHWDetailsOfDC> originalListHwDetail = FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED"));
     private final ObservableList<ServersDC> originalListServersDC = FXCollections.observableArrayList(new ServersDC("Сервер 1", "s1", 1, ""));
-    private ObservableList<DataCentres> originalListDataCentres= FXCollections.observableArrayList(new DataCentres("DC1", 5, "x86", "Linux", "Xen", 0.1, 0.05, 0.1, 0.1, 1, FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED")), FXCollections.observableArrayList(new ServersDC("Сервер 1", "s1", 1, ""))));
+    private ObservableList<DataCentres> originalListDataCentres = FXCollections.observableArrayList(new DataCentres("DC1", 5, "x86", "Linux", "Xen", 0.1, 0.05, 0.1, 0.1, 1, FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED")), FXCollections.observableArrayList(new ServersDC("Сервер 1", "s1", 1, ""))));
     private String originalValueSimDur = "60.0";
     private String originalSimDur = "минуты";
     private String originalBrokerPolicy = "Ближайший ЦОД";
@@ -112,7 +112,7 @@ public class MainConfigurationController {
     //Data center configuration
     @FXML
     private TableView<DataCentres> tableDataCentres = new TableView<>();
-    private  ObservableList<DataCentres> listDataCentres = FXCollections.observableArrayList(new DataCentres("DC1", 5, "x86", "Linux", "Xen", 0.1, 0.05, 0.1, 0.1, 1, listHWDetails, listServersDC));
+    private ObservableList<DataCentres> listDataCentres = FXCollections.observableArrayList(new DataCentres("DC1", 5, "x86", "Linux", "Xen", 0.1, 0.05, 0.1, 0.1, 1, listHWDetails, listServersDC));
     @FXML
     private TableColumn<DataCentres, String> nameOfDataCenterCol;
     @FXML
@@ -196,13 +196,14 @@ public class MainConfigurationController {
         //DataCenterConfiguration
         initDataCenterTable();
         initMainButtons();
-
-      //  saveOriginalData();
+        // Internet Characteristics
+        initInternetCharacteristicsView();
     }
-    private void parentButtons(){
-        buttonConfigureSimulation.setOnAction(event ->{
+
+    private void parentButtons() {
+        buttonConfigureSimulation.setOnAction(event -> {
             paneConfigurationSimulation.setVisible(true);
-            if(isPressedContinue) {
+            if (isPressedContinue) {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("continue.ser"))) {
                     deserialize((RootObjectToSaveData) ois.readObject());
                 } catch (IOException | ClassNotFoundException e) {
@@ -211,14 +212,22 @@ public class MainConfigurationController {
                 isPressedContinue = false;
             }
         });
-        buttonExit.setOnAction(event ->{
+        buttonExit.setOnAction(event -> {
             Platform.exit();
         });
         buttonRunSimulation.setOnAction(event -> {
 
         });
         buttonInternetCharacteristics.setOnAction(event -> {
-
+            paneInternetCharacteristics.setVisible(true);
+            if(isPressedDoneInet){
+                try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("done.ser"))) {
+                    deserialize((RootObjectToSaveInternetCharacteristics) ois.readObject());
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                isPressedDoneInet = false;
+            }
         });
     }
 
@@ -640,6 +649,7 @@ public class MainConfigurationController {
             }
         });
     }
+
     private void initMainButtons() {
         buttonSaveConfiguration.setOnAction(event -> {
             if (Integer.parseInt(textUsGroupingFactorInUB.getText()) < Integer.parseInt(textRequestGroupingFactorInDC.getText())) {
@@ -660,7 +670,7 @@ public class MainConfigurationController {
                         file = new File(filePath);
                     }
                     try (XMLEncoder encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(filePath)))) {
-                        encoder.writeObject(serialize());
+                        encoder.writeObject(serializeConfigureSimulation());
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -692,7 +702,7 @@ public class MainConfigurationController {
         });
         buttonDoneConfiguration.setOnAction(event -> {
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("continue.ser"))) {
-                oos.writeObject(serialize());
+                oos.writeObject(serializeConfigureSimulation());
                 saveOriginalData();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -762,6 +772,7 @@ public class MainConfigurationController {
         originalExecutableInstructionLengthPrReq = "100";
         originalLBPolicy = comboBoxLBPolicy.getValue();
     }
+
     private void alertError(String contentText) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка");
@@ -770,39 +781,39 @@ public class MainConfigurationController {
         alert.showAndWait();
     }
 
-        public RootObjectToSaveData serialize() {
-            RootObjectToSaveData save = new RootObjectToSaveData();
-            SerializableList<UserBaseData> listUsBs = new SerializableList<>();
-            for (int i = 0; i < listUserBases.size(); i++) {
-                listUsBs.add(new UserBaseData(listUserBases.get(i).getName(), listUserBases.get(i).getRegion(), listUserBases.get(i).getRequestsPrUsPrHr(), listUserBases.get(i).getDataSzPrRq(), listUserBases.get(i).getPeakHrStart(), listUserBases.get(i).getPeakHrEnd(), listUserBases.get(i).getAvgPkUsrs(), listUserBases.get(i).getAvgPkOffUsrs()));
-            }
-            SerializableList<AppDeploymentConfigurationData> listApCon = new SerializableList<>();
-            for (int i = 0; i < listAppConf.size(); i++) {
-                listApCon.add(new AppDeploymentConfigurationData(listAppConf.get(i).getDataCenter(), listAppConf.get(i).getVirtualMachines(), listAppConf.get(i).getImageSize(), listAppConf.get(i).getMemory(), listAppConf.get(i).getBandwidth()));
-            }
-            SerializableList<DataCentresData> listDC = new SerializableList<>();
-            for (int i = 0; i < listDataCentres.size(); i++) {
-                SerializableList<PhysicalHWDetailsOfDCData> listDetails = new SerializableList<>();
-                SerializableList<ServersDCData> listServerDC = new SerializableList<>();
-                for (int j = 0; j < listDataCentres.get(i).getListHwDetailsOfDCS().size(); j++) {
-                    listDetails.add(new PhysicalHWDetailsOfDCData(listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getId(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getMemory(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getStorage(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getAvailableBandwidth(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getNumOfProcessors(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getProcessorSpeed(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getVMPolicy()));
-                }
-                for (int j = 0; j < listDataCentres.get(i).getListServersDC().size(); j++) {
-                    listServerDC.add(new ServersDCData(listDataCentres.get(i).getListServersDC().get(j).getName(), listDataCentres.get(i).getListServersDC().get(j).getPrefix(), listDataCentres.get(i).getListServersDC().get(j).getCount(), listDataCentres.get(i).getListServersDC().get(j).getCode()));
-                }
-                listDC.add(new DataCentresData(listDataCentres.get(i).getName(), listDataCentres.get(i).getRegion(), listDataCentres.get(i).getArch(), listDataCentres.get(i).getOS(), listDataCentres.get(i).getVMM(), listDataCentres.get(i).getCostPerVm(), listDataCentres.get(i).getMemoryCost(), listDataCentres.get(i).getStorageCost(), listDataCentres.get(i).getDataTransferCost(), listDataCentres.get(i).getPhysicalHWUnits(), listDetails, listServerDC));
-            }
-            save.setAdvancedData(new AdvancedData(Integer.parseInt(textUsGroupingFactorInUB.getText()), Integer.parseInt(textRequestGroupingFactorInDC.getText()), Integer.parseInt(textExecutableInstructionLengthPrReq.getText()), comboBoxLBPolicy.getValue()));
-
-            save.setSimulationDuration(comboboxSimulationDuration.getValue());
-            save.setValueSimulationDuration(Double.parseDouble(valueSimDurText.getText()));
-            save.setServiceBrokerPolicy(comboboxBrokerPolicy.getValue());
-
-            save.setListUserBases(listUsBs);
-            save.setListAppDeploymentConf(listApCon);
-            save.setListDataCentres(listDC);
-            return save;
+    public RootObjectToSaveData serializeConfigureSimulation() {
+        RootObjectToSaveData save = new RootObjectToSaveData();
+        SerializableList<UserBaseData> listUsBs = new SerializableList<>();
+        for (int i = 0; i < listUserBases.size(); i++) {
+            listUsBs.add(new UserBaseData(listUserBases.get(i).getName(), listUserBases.get(i).getRegion(), listUserBases.get(i).getRequestsPrUsPrHr(), listUserBases.get(i).getDataSzPrRq(), listUserBases.get(i).getPeakHrStart(), listUserBases.get(i).getPeakHrEnd(), listUserBases.get(i).getAvgPkUsrs(), listUserBases.get(i).getAvgPkOffUsrs()));
         }
+        SerializableList<AppDeploymentConfigurationData> listApCon = new SerializableList<>();
+        for (int i = 0; i < listAppConf.size(); i++) {
+            listApCon.add(new AppDeploymentConfigurationData(listAppConf.get(i).getDataCenter(), listAppConf.get(i).getVirtualMachines(), listAppConf.get(i).getImageSize(), listAppConf.get(i).getMemory(), listAppConf.get(i).getBandwidth()));
+        }
+        SerializableList<DataCentresData> listDC = new SerializableList<>();
+        for (int i = 0; i < listDataCentres.size(); i++) {
+            SerializableList<PhysicalHWDetailsOfDCData> listDetails = new SerializableList<>();
+            SerializableList<ServersDCData> listServerDC = new SerializableList<>();
+            for (int j = 0; j < listDataCentres.get(i).getListHwDetailsOfDCS().size(); j++) {
+                listDetails.add(new PhysicalHWDetailsOfDCData(listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getId(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getMemory(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getStorage(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getAvailableBandwidth(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getNumOfProcessors(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getProcessorSpeed(), listDataCentres.get(i).getListHwDetailsOfDCS().get(j).getVMPolicy()));
+            }
+            for (int j = 0; j < listDataCentres.get(i).getListServersDC().size(); j++) {
+                listServerDC.add(new ServersDCData(listDataCentres.get(i).getListServersDC().get(j).getName(), listDataCentres.get(i).getListServersDC().get(j).getPrefix(), listDataCentres.get(i).getListServersDC().get(j).getCount(), listDataCentres.get(i).getListServersDC().get(j).getCode()));
+            }
+            listDC.add(new DataCentresData(listDataCentres.get(i).getName(), listDataCentres.get(i).getRegion(), listDataCentres.get(i).getArch(), listDataCentres.get(i).getOS(), listDataCentres.get(i).getVMM(), listDataCentres.get(i).getCostPerVm(), listDataCentres.get(i).getMemoryCost(), listDataCentres.get(i).getStorageCost(), listDataCentres.get(i).getDataTransferCost(), listDataCentres.get(i).getPhysicalHWUnits(), listDetails, listServerDC));
+        }
+        save.setAdvancedData(new AdvancedData(Integer.parseInt(textUsGroupingFactorInUB.getText()), Integer.parseInt(textRequestGroupingFactorInDC.getText()), Integer.parseInt(textExecutableInstructionLengthPrReq.getText()), comboBoxLBPolicy.getValue()));
+
+        save.setSimulationDuration(comboboxSimulationDuration.getValue());
+        save.setValueSimulationDuration(Double.parseDouble(valueSimDurText.getText()));
+        save.setServiceBrokerPolicy(comboboxBrokerPolicy.getValue());
+
+        save.setListUserBases(listUsBs);
+        save.setListAppDeploymentConf(listApCon);
+        save.setListDataCentres(listDC);
+        return save;
+    }
 
     private void deserialize(RootObjectToSaveData loadedData) {
         listDataCentres.clear();
@@ -849,4 +860,259 @@ public class MainConfigurationController {
 
 
     //----------------------------------INTERNET CHARACTERISTICS------------------------------------------------------
-}
+    @FXML
+    private AnchorPane paneInternetCharacteristics;
+    @FXML
+    private Button buttonDoneInet;
+    @FXML
+    private Button buttonCancelInet;
+
+    @FXML
+    private TableView<MatrixRegion> tableDelayMatrix = new TableView<>();
+    @FXML
+    private TableColumn<MatrixRegion, String> regionDelayCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region0DelayCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region1DelayCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region2DelayCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region3DelayCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region4DelayCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region5DelayCol;
+
+    private ObservableList<MatrixRegion> listDelayMatrix = FXCollections.observableArrayList(new MatrixRegion(0, 25, 100, 150, 250, 250, 100),
+            new MatrixRegion(1, 100, 25, 250, 500, 350, 200),
+            new MatrixRegion(2, 150, 250, 25, 150, 150, 200),
+            new MatrixRegion(3, 250, 500, 150, 25, 500, 500),
+            new MatrixRegion(4, 250, 350, 150, 500, 25, 500),
+            new MatrixRegion(5, 100, 200, 200, 500, 500, 25));
+    //Bandwidth
+    @FXML
+    private TableView<MatrixRegion> tableBandwidthMatrix = new TableView<>();
+    @FXML
+    private TableColumn<MatrixRegion, String> regionBandwidthCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region0BandwidthCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region1BandwidthCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region2BandwidthCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region3BandwidthCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region4BandwidthCol;
+    @FXML
+    private TableColumn<MatrixRegion, String> region5BandwidthCol;
+
+    private ObservableList<MatrixRegion> listBandwidthMatrix = FXCollections.observableArrayList(new MatrixRegion(0, 2000, 1000, 1000, 1000, 1000, 1000),
+            new MatrixRegion(1, 1000, 800, 1000, 1000, 1000, 1000),
+            new MatrixRegion(2, 1000, 1000, 2500, 1000, 1000, 1000),
+            new MatrixRegion(3, 1000, 1000, 1000, 1500, 1000, 1000),
+            new MatrixRegion(4, 1000, 1000, 1000, 1000, 500, 1000),
+            new MatrixRegion(5, 1000, 1000, 1000, 1000, 1000, 2000));
+
+    private ObservableList<MatrixRegion> originalListDelayMatrix = FXCollections.observableArrayList(new MatrixRegion(0, 25, 100, 150, 250, 250, 100),
+            new MatrixRegion(1, 100, 25, 250, 500, 350, 200),
+            new MatrixRegion(2, 150, 250, 25, 150, 150, 200),
+            new MatrixRegion(3, 250, 500, 150, 25, 500, 500),
+            new MatrixRegion(4, 250, 350, 150, 500, 25, 500),
+            new MatrixRegion(5, 100, 200, 200, 500, 500, 25));
+    private ObservableList<MatrixRegion> originalListBandwidthMatrix = FXCollections.observableArrayList(new MatrixRegion(0, 2000, 1000, 1000, 1000, 1000, 1000),
+            new MatrixRegion(1, 1000, 800, 1000, 1000, 1000, 1000),
+            new MatrixRegion(2, 1000, 1000, 2500, 1000, 1000, 1000),
+            new MatrixRegion(3, 1000, 1000, 1000, 1500, 1000, 1000),
+            new MatrixRegion(4, 1000, 1000, 1000, 1000, 500, 1000),
+            new MatrixRegion(5, 1000, 1000, 1000, 1000, 1000, 2000));
+
+    boolean isPressedDoneInet = false;
+
+    private void initInternetCharacteristicsView() {
+        initDelayMatrixTable();
+        initBandwidthMatrixTable();
+        initInternetButtons();
+    }
+
+    private void initDelayMatrixTable() {
+        regionDelayCol.setStyle("-fx-alignment: CENTER;");
+
+        regionDelayCol.setCellValueFactory(cellData -> cellData.getValue().regionProperty());
+        region0DelayCol.setCellValueFactory(cellData -> cellData.getValue().region0Property());
+        region1DelayCol.setCellValueFactory(cellData -> cellData.getValue().region1Property());
+        region2DelayCol.setCellValueFactory(cellData -> cellData.getValue().region2Property());
+        region3DelayCol.setCellValueFactory(cellData -> cellData.getValue().region3Property());
+        region4DelayCol.setCellValueFactory(cellData -> cellData.getValue().region4Property());
+        region5DelayCol.setCellValueFactory(cellData -> cellData.getValue().region5Property());
+
+        regionDelayCol.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item);
+                }
+            }
+        });
+        region0DelayCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        region1DelayCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        region2DelayCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        region3DelayCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        region4DelayCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        region5DelayCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        region0DelayCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion0(Integer.parseInt(event.getNewValue()));
+        });
+        region1DelayCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion1(Integer.parseInt(event.getNewValue()));
+        });
+        region2DelayCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion2(Integer.parseInt(event.getNewValue()));
+        });
+        region3DelayCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion3(Integer.parseInt(event.getNewValue()));
+        });
+        region4DelayCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion4(Integer.parseInt(event.getNewValue()));
+        });
+        region5DelayCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion5(Integer.parseInt(event.getNewValue()));
+        });
+        tableDelayMatrix.setItems(listDelayMatrix);
+    }
+
+    private void initBandwidthMatrixTable() {
+        regionBandwidthCol.setStyle("-fx-alignment: CENTER;");
+
+        regionBandwidthCol.setCellValueFactory(cellData -> cellData.getValue().regionProperty());
+        region0BandwidthCol.setCellValueFactory(cellData -> cellData.getValue().region0Property());
+        region1BandwidthCol.setCellValueFactory(cellData -> cellData.getValue().region1Property());
+        region2BandwidthCol.setCellValueFactory(cellData -> cellData.getValue().region2Property());
+        region3BandwidthCol.setCellValueFactory(cellData -> cellData.getValue().region3Property());
+        region4BandwidthCol.setCellValueFactory(cellData -> cellData.getValue().region4Property());
+        region5BandwidthCol.setCellValueFactory(cellData -> cellData.getValue().region5Property());
+
+        regionBandwidthCol.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item);
+                }
+            }
+        });
+        region0BandwidthCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        region1BandwidthCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        region2BandwidthCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        region3BandwidthCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        region4BandwidthCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        region5BandwidthCol.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        region0BandwidthCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion0(Integer.parseInt(event.getNewValue()));
+        });
+        region1BandwidthCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion1(Integer.parseInt(event.getNewValue()));
+        });
+        region2BandwidthCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion2(Integer.parseInt(event.getNewValue()));
+        });
+        region3BandwidthCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion3(Integer.parseInt(event.getNewValue()));
+        });
+        region4BandwidthCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion4(Integer.parseInt(event.getNewValue()));
+        });
+        region5BandwidthCol.setOnEditCommit(event -> {
+            MatrixRegion matrixRegion = event.getRowValue();
+            matrixRegion.setRegion5(Integer.parseInt(event.getNewValue()));
+        });
+        tableBandwidthMatrix.setItems(listBandwidthMatrix);
+    }
+
+    private void initInternetButtons() {
+        buttonDoneInet.setOnAction(event -> {
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("done.ser"))) {
+                oos.writeObject(serializeInternetCharacteristics());
+                saveOriginalInternetCharacteristics();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            isPressedDoneInet = true;
+            paneInternetCharacteristics.setVisible(false);
+        });
+        buttonCancelInet.setOnAction(event -> {
+            paneInternetCharacteristics.setVisible(false);
+
+            listDelayMatrix = FXCollections.observableArrayList();
+            for (MatrixRegion mr : originalListDelayMatrix) {
+                listDelayMatrix.add(mr.copy());
+            }
+            listBandwidthMatrix = FXCollections.observableArrayList();
+            for (MatrixRegion mr : originalListBandwidthMatrix) {
+                listBandwidthMatrix.add(mr.copy());
+            }
+
+            tableDelayMatrix.setItems(listDelayMatrix);
+            tableBandwidthMatrix.setItems(listBandwidthMatrix);
+        });
+    }
+
+    private RootObjectToSaveInternetCharacteristics serializeInternetCharacteristics() {
+        RootObjectToSaveInternetCharacteristics internetCharacteristics = new RootObjectToSaveInternetCharacteristics();
+        SerializableList<MatrixRegionData> listDelayMatrixData = new SerializableList<>();
+        for (int i = 0; i < listDelayMatrix.size(); i++) {
+            listDelayMatrixData.add(new MatrixRegionData(listDelayMatrix.get(i).getRegion(), listDelayMatrix.get(i).getRegion0(), listDelayMatrix.get(i).getRegion1(), listDelayMatrix.get(i).getRegion2(), listDelayMatrix.get(i).getRegion3(), listDelayMatrix.get(i).getRegion4(), listDelayMatrix.get(i).getRegion5()));
+        }
+        SerializableList<MatrixRegionData> listBandwidthMatrixData = new SerializableList<>();
+        for (int i = 0; i < listBandwidthMatrix.size(); i++) {
+            listBandwidthMatrixData.add(new MatrixRegionData(listBandwidthMatrix.get(i).getRegion(), listBandwidthMatrix.get(i).getRegion0(), listBandwidthMatrix.get(i).getRegion1(), listBandwidthMatrix.get(i).getRegion2(), listBandwidthMatrix.get(i).getRegion3(), listBandwidthMatrix.get(i).getRegion4(), listBandwidthMatrix.get(i).getRegion5()));
+        }
+        internetCharacteristics.setListBandwidthMatrix(listBandwidthMatrixData);
+        internetCharacteristics.setListDelayMatrix(listDelayMatrixData);
+        return internetCharacteristics;
+    }
+
+    private void deserialize (RootObjectToSaveInternetCharacteristics loadedData) {
+        listDelayMatrix.clear();
+        listBandwidthMatrix.clear();
+
+        for (int i = 0; i <loadedData.getListDelayMatrix().size(); i++) {
+            MatrixRegionData mr = loadedData.getListDelayMatrix().get(i);
+            listDelayMatrix.add(new MatrixRegion(mr.getRegion(), mr.getRegion0(),mr.getRegion1(),mr.getRegion2(),mr.getRegion3(),mr.getRegion4(),mr.getRegion5()));
+        }
+        for (int i = 0; i <loadedData.getListBandwidthMatrix().size(); i++) {
+            MatrixRegionData mr = loadedData.getListBandwidthMatrix().get(i);
+            listBandwidthMatrix.add(new MatrixRegion(mr.getRegion(), mr.getRegion0(),mr.getRegion1(),mr.getRegion2(),mr.getRegion3(),mr.getRegion4(),mr.getRegion5()));
+        }
+        tableDelayMatrix.refresh();
+        tableBandwidthMatrix.refresh();
+    }
+
+    private void saveOriginalInternetCharacteristics() {
+        originalListDelayMatrix = FXCollections.observableArrayList(listDelayMatrix);
+        originalListBandwidthMatrix = FXCollections.observableArrayList(listBandwidthMatrix);
+    }
+}                   
