@@ -16,6 +16,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -34,15 +36,22 @@ public class MainConfigurationController {
     private final ObservableList<ServersDC> listServersDC = FXCollections.observableArrayList(new ServersDC("Сервер 1", "s1", 1, ""));
 
     @FXML
-    AnchorPane paneConfigurationSimulation;
+    private AnchorPane paneMain;
     @FXML
-    Button buttonConfigureSimulation;
+    private ImageView imageMap;
     @FXML
-    Button buttonInternetCharacteristics;
+    private Button buttonBoundariesRegion;
+
     @FXML
-    Button buttonRunSimulation;
+    private AnchorPane paneConfigurationSimulation;
     @FXML
-    Button buttonExit;
+    private Button buttonConfigureSimulation;
+    @FXML
+    private Button buttonInternetCharacteristics;
+    @FXML
+    private Button buttonRunSimulation;
+    @FXML
+    private Button buttonExit;
 
     boolean isPressedContinue = false;
 
@@ -189,6 +198,7 @@ public class MainConfigurationController {
     @FXML
     void initialize() {
         parentButtons();
+        initMainView();
         //MainConfiguration
         initComboBoxes();
         initUserTable();
@@ -202,7 +212,9 @@ public class MainConfigurationController {
 
     private void parentButtons() {
         buttonConfigureSimulation.setOnAction(event -> {
+            paneMain.setVisible(false);
             paneConfigurationSimulation.setVisible(true);
+            disableOtherButtons();
             if (isPressedContinue) {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("continue.ser"))) {
                     deserialize((RootObjectToSaveData) ois.readObject());
@@ -212,15 +224,19 @@ public class MainConfigurationController {
                 isPressedContinue = false;
             }
         });
+
         buttonExit.setOnAction(event -> {
             Platform.exit();
         });
         buttonRunSimulation.setOnAction(event -> {
 
+            disableOtherButtons();
         });
         buttonInternetCharacteristics.setOnAction(event -> {
+            disableOtherButtons();
+            paneMain.setVisible(false);
             paneInternetCharacteristics.setVisible(true);
-            if(isPressedDoneInet){
+            if (isPressedDoneInet) {
                 try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("done.ser"))) {
                     deserialize((RootObjectToSaveInternetCharacteristics) ois.readObject());
                 } catch (IOException | ClassNotFoundException e) {
@@ -229,6 +245,34 @@ public class MainConfigurationController {
                 isPressedDoneInet = false;
             }
         });
+    }
+
+    private void initMainView() {
+        imageMap.setImage(new Image("map1.png"));
+        buttonBoundariesRegion.setOnAction(event ->{
+            imageMap.setImage(new Image("map2.png"));
+        });
+
+    }
+
+    private void disableOtherButtons() {
+        Button[] buttons = {buttonConfigureSimulation, buttonInternetCharacteristics, buttonRunSimulation, buttonExit};
+
+        for (Button button : buttons) {
+            if (button != buttonExit) {
+                button.setDisable(true);
+                button.setStyle("-fx-opacity: 0.5;"); // Пример затемнения кнопки
+            }
+        }
+    }
+
+    private void enableAllButtons() {
+        Button[] buttons = {buttonConfigureSimulation, buttonInternetCharacteristics, buttonRunSimulation, buttonExit};
+
+        for (Button button : buttons) {
+            button.setDisable(false);
+            button.setStyle("-fx-opacity: 1.0;"); // Восстановление стандартного стиля
+        }
     }
 
     private void initComboBoxes() {
@@ -678,7 +722,7 @@ public class MainConfigurationController {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            new XMLWriter().saveToXML(listUserBases, listAppConf);
+            new XMLWriter().saveToXML(listUserBases, listAppConf, listDataCentres);
         });
         buttonLoadConfiguration.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
@@ -701,6 +745,7 @@ public class MainConfigurationController {
             }
         });
         buttonDoneConfiguration.setOnAction(event -> {
+            enableAllButtons();
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("continue.ser"))) {
                 oos.writeObject(serializeConfigureSimulation());
                 saveOriginalData();
@@ -709,9 +754,12 @@ public class MainConfigurationController {
             }
             isPressedContinue = true;
             paneConfigurationSimulation.setVisible(false);
+            paneMain.setVisible(true);
         });
         buttonCancelConfiguration.setOnAction(event -> {
+            enableAllButtons();
             paneConfigurationSimulation.setVisible(false);
+            paneMain.setVisible(true);
             windowPhysicalHWDetails.setVisible(false);
 
             listUserBases = FXCollections.observableArrayList();
@@ -1054,6 +1102,7 @@ public class MainConfigurationController {
 
     private void initInternetButtons() {
         buttonDoneInet.setOnAction(event -> {
+            enableAllButtons();
             try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("done.ser"))) {
                 oos.writeObject(serializeInternetCharacteristics());
                 saveOriginalInternetCharacteristics();
@@ -1062,10 +1111,10 @@ public class MainConfigurationController {
             }
             isPressedDoneInet = true;
             paneInternetCharacteristics.setVisible(false);
+            paneMain.setVisible(true);
         });
         buttonCancelInet.setOnAction(event -> {
-            paneInternetCharacteristics.setVisible(false);
-
+            enableAllButtons();
             listDelayMatrix = FXCollections.observableArrayList();
             for (MatrixRegion mr : originalListDelayMatrix) {
                 listDelayMatrix.add(mr.copy());
@@ -1077,6 +1126,9 @@ public class MainConfigurationController {
 
             tableDelayMatrix.setItems(listDelayMatrix);
             tableBandwidthMatrix.setItems(listBandwidthMatrix);
+
+            paneInternetCharacteristics.setVisible(false);
+            paneMain.setVisible(true);
         });
     }
 
@@ -1095,17 +1147,17 @@ public class MainConfigurationController {
         return internetCharacteristics;
     }
 
-    private void deserialize (RootObjectToSaveInternetCharacteristics loadedData) {
+    private void deserialize(RootObjectToSaveInternetCharacteristics loadedData) {
         listDelayMatrix.clear();
         listBandwidthMatrix.clear();
 
-        for (int i = 0; i <loadedData.getListDelayMatrix().size(); i++) {
+        for (int i = 0; i < loadedData.getListDelayMatrix().size(); i++) {
             MatrixRegionData mr = loadedData.getListDelayMatrix().get(i);
-            listDelayMatrix.add(new MatrixRegion(mr.getRegion(), mr.getRegion0(),mr.getRegion1(),mr.getRegion2(),mr.getRegion3(),mr.getRegion4(),mr.getRegion5()));
+            listDelayMatrix.add(new MatrixRegion(mr.getRegion(), mr.getRegion0(), mr.getRegion1(), mr.getRegion2(), mr.getRegion3(), mr.getRegion4(), mr.getRegion5()));
         }
-        for (int i = 0; i <loadedData.getListBandwidthMatrix().size(); i++) {
+        for (int i = 0; i < loadedData.getListBandwidthMatrix().size(); i++) {
             MatrixRegionData mr = loadedData.getListBandwidthMatrix().get(i);
-            listBandwidthMatrix.add(new MatrixRegion(mr.getRegion(), mr.getRegion0(),mr.getRegion1(),mr.getRegion2(),mr.getRegion3(),mr.getRegion4(),mr.getRegion5()));
+            listBandwidthMatrix.add(new MatrixRegion(mr.getRegion(), mr.getRegion0(), mr.getRegion1(), mr.getRegion2(), mr.getRegion3(), mr.getRegion4(), mr.getRegion5()));
         }
         tableDelayMatrix.refresh();
         tableBandwidthMatrix.refresh();

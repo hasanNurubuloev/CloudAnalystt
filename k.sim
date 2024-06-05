@@ -208,8 +208,27 @@
           <void property="count">
            <int>1</int>
           </void>
+          <void property="name">
+           <string>Serv2</string>
+          </void>
           <void property="prefix">
            <string>Сервер 1</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.ServersDCData">
+          <void property="code">
+           <string>yvhv</string>
+          </void>
+          <void property="count">
+           <int>1</int>
+          </void>
+          <void property="name">
+           <string>cthd1`</string>
+          </void>
+          <void property="prefix">
+           <string>ggc</string>
           </void>
          </object>
         </void>
@@ -337,6 +356,22 @@
           </void>
           <void property="prefix">
            <string>Сервер 1</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.example.cloudanalystt.utils.utilsForSerializable.ServersDCData">
+          <void property="code">
+           <string>ds</string>
+          </void>
+          <void property="count">
+           <int>1</int>
+          </void>
+          <void property="name">
+           <string></string>
+          </void>
+          <void property="prefix">
+           <string>dsd</string>
           </void>
          </object>
         </void>

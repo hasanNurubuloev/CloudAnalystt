@@ -8,11 +8,18 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="734.0" prefWidth="1240.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cloudanalystt.ui.MainConfigurationController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="694.0" prefWidth="1201.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cloudanalystt.ui.MainConfigurationController">
     <children>
+      <AnchorPane id="pane_main" fx:id="paneMain" layoutX="30.0" layoutY="72.0" prefHeight="610.0" prefWidth="1139.0">
+         <children>
+            <ImageView id="image_map" fx:id="imageMap" fitHeight="457.0" fitWidth="800.0" layoutX="170.0" layoutY="35.0" pickOnBounds="true" preserveRatio="true" />
+            <Button id="button_boundaries_region" fx:id="buttonBoundariesRegion" layoutX="868.0" layoutY="554.0" mnemonicParsing="false" text="Показать границы региона" />
+         </children>
+      </AnchorPane>
         <AnchorPane id="pane_configure_simulation" fx:id="paneConfigurationSimulation" layoutX="29.0" layoutY="72.0" prefHeight="616.0" prefWidth="1170.0" visible="false" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="72.0">
             <children>
                 <TabPane layoutX="13.0" layoutY="9.0" prefHeight="550.0" prefWidth="1139.0" tabClosingPolicy="UNAVAILABLE">
@@ -91,7 +98,7 @@
                                                         <TableColumn id="memory_col_detail_of_data_center" fx:id="memoryHwDetailsCol" minWidth="0.0" prefWidth="90.0" text="Память &#10;(Мб)" />
                                                         <TableColumn id="storage_col_detail_of_data_center" fx:id="storageHwDetailsCol" prefWidth="100.0" text="Хранилище&#10;Мб" />
                                                         <TableColumn id="available_bandwidth_col_detail_of_data_center" fx:id="availableBandwidthHwDetailsCol" prefWidth="139.0" text="Доступная &#10;полоса&#10;пропускания" />
-                                                        <TableColumn id="number_of_processor_col_detail_of_data_center" fx:id="numOfProcessorHwDetailsCol" prefWidth="121.0" text="Номер &#10;процессора" />
+                                                        <TableColumn id="number_of_processor_col_detail_of_data_center" fx:id="numOfProcessorHwDetailsCol" prefWidth="121.0" text="Количество&#10;процессоров" />
                                                         <TableColumn id="processor_speed_col_detail_of_data_center" fx:id="speedOfProcessorHwDetailsCol" prefWidth="145.0" text="Скорость &#10;процессора" />
                                                         <TableColumn id="vm_policy_col_detail_of_data_center" fx:id="VMPolicyHwDetailsCol" prefWidth="168.0" text="Политика &#10;виртуальной &#10;машины" />
                                                     </columns>
@@ -130,27 +137,27 @@
               <Button id="button_cancel_configuration_main" fx:id="buttonCancelConfiguration" layoutX="196.0" layoutY="559.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="131.0" text="Отменить" />
             </children>
         </AnchorPane>
-        <Button id="button_configure_simulation" fx:id="buttonConfigureSimulation" layoutX="25.0" layoutY="31.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="209.0" text="Настройка моделирования" textAlignment="CENTER" wrapText="true">
+        <Button id="button_configure_simulation" fx:id="buttonConfigureSimulation" layoutX="166.0" layoutY="32.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="209.0" text="Настройка моделирования" textAlignment="CENTER" wrapText="true">
             <font>
                 <Font size="12.0" />
             </font>
         </Button>
-        <Button id="button_internet_characteristics" fx:id="buttonInternetCharacteristics" layoutX="251.0" layoutY="31.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="305.0" text="Определение характеристик интернета" textAlignment="CENTER" wrapText="true">
+        <Button id="button_internet_characteristics" fx:id="buttonInternetCharacteristics" layoutX="392.0" layoutY="32.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="305.0" text="Определение характеристик интернета" textAlignment="CENTER" wrapText="true">
             <font>
                 <Font size="12.0" />
             </font>
         </Button>
-        <Button id="button_run_simulation" fx:id="buttonRunSimulation" layoutX="570.0" layoutY="31.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="185.0" text="Запуск моделирования" textAlignment="CENTER" wrapText="true">
+        <Button id="button_run_simulation" fx:id="buttonRunSimulation" layoutX="711.0" layoutY="32.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="185.0" text="Запуск моделирования" textAlignment="CENTER" wrapText="true">
             <font>
                 <Font size="12.0" />
             </font>
         </Button>
-        <Button id="button_exit" fx:id="buttonExit" layoutX="763.0" layoutY="32.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="131.0" text="Выход">
+        <Button id="button_exit" fx:id="buttonExit" layoutX="904.0" layoutY="33.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="131.0" text="Выход">
             <font>
                 <Font size="12.0" />
             </font>
         </Button>
-      <AnchorPane id="pane_internet_characteristics" fx:id="paneInternetCharacteristics" layoutX="30.0" layoutY="72.0" prefHeight="649.0" prefWidth="990.0" visible="false">
+      <AnchorPane id="pane_internet_characteristics" fx:id="paneInternetCharacteristics" layoutX="30.0" layoutY="72.0" prefHeight="616.0" prefWidth="990.0" visible="false">
          <children>
             <Label layoutX="37.0" prefHeight="51.0" prefWidth="395.0" text="Настройка характеристик интернета">
                <font>
@@ -204,8 +211,8 @@
                   <TableColumn fx:id="region5BandwidthCol" prefWidth="100.0" text="5" />
                </columns>
             </TableView>
-            <Button fx:id="buttonDoneInet" id="button_done_internet" layoutX="272.0" layoutY="574.0" mnemonicParsing="false" text="Продолжить" />
-            <Button fx:id="buttonCancelInet" id="button_cancel_internet" layoutX="401.0" layoutY="574.0" mnemonicParsing="false" text="Отменить" />
+            <Button id="button_done_internet" fx:id="buttonDoneInet" layoutX="272.0" layoutY="574.0" mnemonicParsing="false" text="Продолжить" />
+            <Button id="button_cancel_internet" fx:id="buttonCancelInet" layoutX="401.0" layoutY="574.0" mnemonicParsing="false" text="Отменить" />
          </children>
       </AnchorPane>
     </children>
