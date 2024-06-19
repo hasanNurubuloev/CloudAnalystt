@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="574.0" prefWidth="765.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cloudanalystt.ui.SimulationController">
+   <children>
+      <TableView id="table_all_requests" fx:id="tableAllRequests" layoutX="71.0" layoutY="340.0" prefHeight="160.0" prefWidth="639.0">
+        <columns>
+          <TableColumn id="host_col" fx:id="hostCol" prefWidth="167.0" text="Пользователь" />
+          <TableColumn id="state_col" fx:id="stateCol" prefWidth="96.0" text="Состояние" />
+            <TableColumn id="start_time_col" fx:id="startTimeCol" prefWidth="95.0" text="Начало" />
+            <TableColumn id="end_time_col" fx:id="endTimeCol" prefWidth="98.0" text="Конец" />
+            <TableColumn id="duration_col" fx:id="durationTimeCol" prefWidth="169.0" text="Продолжительность" />
+        </columns>
+      </TableView>
+      <Label layoutX="12.0" layoutY="67.0" text="Время отклика &#10;пользователя">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="151.0" layoutY="29.0" text="Минимальное (мс)">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="317.0" layoutY="29.0" text="Максимальное (мс)">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="488.0" layoutY="29.0" text="Среднее (мс)">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label id="text_min_value" fx:id="textMinValue" layoutX="168.0" layoutY="75.0" prefHeight="16.0" prefWidth="106.0" />
+      <Label id="text_max_value" fx:id="textMaxValue" layoutX="330.0" layoutY="75.0" prefHeight="16.0" prefWidth="106.0" />
+      <Label id="text_avg_value" fx:id="textAvgValue" layoutX="482.0" layoutY="75.0" prefHeight="16.0" prefWidth="112.0" />
+      <TableView id="table_server_response" fx:id="tableServerResponseTime" layoutX="71.0" layoutY="152.0" prefHeight="149.0" prefWidth="639.0">
+        <columns>
+          <TableColumn id="server_col" fx:id="serverCol" prefWidth="162.0" text="Сервер" />
+            <TableColumn id="min_col" fx:id="minCol" prefWidth="148.0" text="Минимальное" />
+            <TableColumn id="max_col" fx:id="maxCol" prefWidth="174.0" text="Максимальное" />
+            <TableColumn id="avg_col" fx:id="avgCol" prefWidth="154.0" text="Среднее" />
+        </columns>
+      </TableView>
+      <Label layoutX="260.0" layoutY="127.0" text="Время отклика по серверам">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label layoutX="356.0" layoutY="312.0" text="Запросы">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

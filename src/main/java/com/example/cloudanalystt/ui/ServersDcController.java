@@ -31,7 +31,7 @@ public class ServersDcController {
     private AnchorPane windowAdvanced;
     @FXML
     private AnchorPane windowAdd;
-    private ObservableList<ServersDC> listServers = FXCollections.observableArrayList(new ServersDC("Сервер 1", "s1",  1, " "));
+    private ObservableList<ServersDC> listServers = FXCollections.observableArrayList(new ServersDC("Cloud Broker", "cb",  1, " "), new ServersDC("Load Balancer", "lb",  1, " "),new ServersDC("WEB Server", "web",  1, " "), new ServersDC("App Server", "app",  1, " "), new ServersDC("DataBase server", "db",  1, " "));
 
     @FXML
     private TextField textPrefixAdd;

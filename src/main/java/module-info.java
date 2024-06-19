@@ -9,6 +9,7 @@ module com.example.cloudanalystt {
     requires com.fasterxml.jackson.dataformat.xml;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.databind;
+    requires org.dhatim.fastexcel.reader;
 
     opens com.example.cloudanalystt to javafx.fxml;
     exports com.example.cloudanalystt;

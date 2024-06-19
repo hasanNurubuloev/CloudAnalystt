@@ -33,7 +33,7 @@ import java.util.*;
 public class MainConfigurationController {
 
     private ObservableList<PhysicalHWDetailsOfDC> listHWDetails = FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED"));
-    private final ObservableList<ServersDC> listServersDC = FXCollections.observableArrayList(new ServersDC("Сервер 1", "s1", 1, ""));
+    private final ObservableList<ServersDC> listServersDC = FXCollections.observableArrayList(new ServersDC("Cloud Broker", "cb",  1, " "), new ServersDC("Load Balancer", "lb",  1, " "),new ServersDC("WEB Server", "web",  1, " "), new ServersDC("App Server", "app",  1, " "), new ServersDC("DataBase server", "db",  1, " "));
 
     @FXML
     private AnchorPane paneMain;
@@ -208,6 +208,8 @@ public class MainConfigurationController {
         initMainButtons();
         // Internet Characteristics
         initInternetCharacteristicsView();
+
+
     }
 
     private void parentButtons() {
@@ -229,7 +231,19 @@ public class MainConfigurationController {
             Platform.exit();
         });
         buttonRunSimulation.setOnAction(event -> {
-
+//            Simulation.test();
+            try {
+                Stage stage = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("simulation.fxml"));
+                Scene scene = null;
+                scene = new Scene(fxmlLoader.load());
+                stage.setScene(scene);
+                stage.setTitle("Статистика");
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             disableOtherButtons();
         });
         buttonInternetCharacteristics.setOnAction(event -> {
@@ -249,7 +263,7 @@ public class MainConfigurationController {
 
     private void initMainView() {
         imageMap.setImage(new Image("map1.png"));
-        buttonBoundariesRegion.setOnAction(event ->{
+        buttonBoundariesRegion.setOnAction(event -> {
             imageMap.setImage(new Image("map2.png"));
         });
 
@@ -516,7 +530,7 @@ public class MainConfigurationController {
 
         buttonAddDataCentres.setOnAction(event -> {
             int countDataUsers = listDataCentres.size() + 1;
-            listDataCentres.add(new DataCentres("DC" + countDataUsers, 5, "x86", "Linux", "Xen", 0.1, 0.05, 0.1, 0.1, 1, FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED")), FXCollections.observableArrayList(new ServersDC("Сервер 1", "s1", 1, ""))));
+            listDataCentres.add(new DataCentres("DC" + countDataUsers, 5, "x86", "Linux", "Xen", 0.1, 0.05, 0.1, 0.1, 1, FXCollections.observableArrayList(new PhysicalHWDetailsOfDC(0, 204800, 100000000, 1000000, 4, 10000, "TIME_SHARED")), FXCollections.observableArrayList(new ServersDC("Cloud Broker", "cb",  1, " "), new ServersDC("Load Balancer", "lb",  1, " "),new ServersDC("WEB Server", "web",  1, " "), new ServersDC("App Server", "app",  1, " "), new ServersDC("DataBase server", "db",  1, " "))));
             updateDataCenterNames();
             tableDataCentres.getSelectionModel().clearSelection();
             windowPhysicalHWDetails.setVisible(false);
@@ -629,6 +643,7 @@ public class MainConfigurationController {
         buttonCopyHwDetail.setOnAction(event -> {
             if (tablePhysicalHWDetailsOfDC.getSelectionModel().getSelectedItem() != null) {
                 Spinner<Integer> spinner = new Spinner<>(1, 100, 1);
+                spinner.setEditable(true);
 
                 Dialog<Integer> dialog = new Dialog<>();
                 dialog.setTitle("Количество копий");
@@ -1167,4 +1182,4 @@ public class MainConfigurationController {
         originalListDelayMatrix = FXCollections.observableArrayList(listDelayMatrix);
         originalListBandwidthMatrix = FXCollections.observableArrayList(listBandwidthMatrix);
     }
-}                   
+}

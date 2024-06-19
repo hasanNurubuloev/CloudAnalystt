@@ -112,7 +112,7 @@ public class XMLWriter {
         cluster.setAttribute("id", listUserBases.get(i).getName());
         cluster.setAttribute("prefix", "u-");
         cluster.setAttribute("suffix", ".uz");
-        cluster.setAttribute("radical", "0-10");
+        cluster.setAttribute("radical", "0-" + listUserBases.get(i).getAvgPkOffUsrs());
         cluster.setAttribute("speed", "1Gf");
         cluster.setAttribute("bw", "125MBps");
         cluster.setAttribute("lat", "50us");
