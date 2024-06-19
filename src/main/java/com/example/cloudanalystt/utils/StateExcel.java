@@ -4,14 +4,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class StateExcel {
-    private StringProperty host;
+    private StringProperty server;
     private StringProperty state;
     private StringProperty startTime;
     private StringProperty endTime;
     private StringProperty durationTime;
 
-    public StateExcel(String host, String state, float startTime, float endTime, float durationTime) {
-        this.host = new SimpleStringProperty(host);
+    public StateExcel(String server, String state, float startTime, float endTime, float durationTime) {
+        this.server = new SimpleStringProperty(server);
         this.state = new SimpleStringProperty(state);
         this.startTime = new SimpleStringProperty(String.valueOf(startTime));
         this.endTime = new SimpleStringProperty(String.valueOf(endTime));
@@ -30,16 +30,16 @@ public class StateExcel {
         this.durationTime.set(String.valueOf(durationTime));
     }
 
-    public String getHost() {
-        return host.get();
+    public String getServer() {
+        return server.get();
     }
 
-    public StringProperty hostProperty() {
-        return host;
+    public StringProperty serverProperty() {
+        return server;
     }
 
-    public void setHost(String host) {
-        this.host.set(host);
+    public void setServer(String server) {
+        this.server.set(server);
     }
 
     public String getState() {

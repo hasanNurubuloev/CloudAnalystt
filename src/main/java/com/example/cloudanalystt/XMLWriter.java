@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class XMLWriter {
 
-    public void saveToXML(ObservableList<UserBases> listUserBases, ObservableList<AppDeploymentConfiguration> listAppConf, ObservableList<DataCentres> listDataCenters) {
+    public void createPlatformFile(ObservableList<UserBases> listUserBases, ObservableList<AppDeploymentConfiguration> listAppConf, ObservableList<DataCentres> listDataCenters) {
         Element platform = new Element("platform");
         platform.setAttribute("version", "4.1");
 
@@ -88,7 +88,7 @@ public class XMLWriter {
         zone.addContent(link2);
         zone.addContent(link3);
 
-        zone.addContent(createZoneRoute(dataCenter.getAttributeValue("id"), users.getAttributeValue("id"),dataCenter.getChild("host1").getAttributeValue("id"), users.getAttributeValue("router_id"), link1.getName()));
+        zone.addContent(createZoneRoute(dataCenter.getAttributeValue("id"), users.getAttributeValue("id"),dataCenter.getChild("host").getAttributeValue("id"), users.getAttributeValue("router_id"), link1.getName()));
         zone.addContent(createZoneRoute(dataCenter.getAttributeValue("id"), blades.getAttributeValue("id"),dataCenter.getChild("host").getAttributeValue("id"), blades.getChild("cluster").getAttributeValue("router_id"), link2.getName()));
         zone.addContent(createZoneRoute(blades.getAttributeValue("id"), users.getAttributeValue("id"),blades.getChild("cluster").getAttributeValue("router_id"), users.getAttributeValue("router_id"), link3.getName()));
 
@@ -100,7 +100,7 @@ public class XMLWriter {
             System.out.println("Current working directory: " + System.getProperty("user.dir"));
 
             // Записываем XML документ в файл
-            xmlOutput.output(doc, new FileWriter("output.xml"));
+            xmlOutput.output(doc, new FileWriter("platform.xml"));
             System.out.println("XML файл успешно создан!");
         } catch (IOException e) {
             e.printStackTrace();
@@ -132,5 +132,47 @@ public class XMLWriter {
 
         zoneRoute.addContent(linkCtn);
         return zoneRoute;
+    }
+
+    public void createDeploymentFile (ObservableList<DataCentres> listDataCenters){
+        // Создаем корневой элемент platform с атрибутом version
+        Element platform = new Element("platform");
+        platform.setAttribute("version", "4.1");
+
+        // Создаем документ XML
+        Document doc = new Document(platform);
+
+        // Добавляем комментарий
+        platform.addContent(new org.jdom2.Comment("Need to read all cloudstations"));
+
+        // Создаем элемент actor с атрибутами host и function
+        Element actor = new Element("actor");
+        actor.setAttribute("host", "cb1");
+        actor.setAttribute("function", "cloudBroker");
+
+        var listServerDC = listDataCenters.getFirst().getListServersDC();
+        // Добавляем элементы argument с значениями
+        for (String value : new String[]{"1", String.valueOf(listServerDC.getFirst().getCount()), String.valueOf(listServerDC.get(1).getCount()), String.valueOf(listServerDC.get(4).getCount()), String.valueOf(listServerDC.get(3).getCount()), String.valueOf(listServerDC.get(2).getCount()), "2", "1000", "10000", "100000000"}) {
+            Element argument = new Element("argument");
+            argument.setAttribute("value", value);
+            actor.addContent(argument);
+        }
+
+        // Добавляем элемент actor в корневой элемент platform
+        platform.addContent(actor);
+
+        // Создаем объект XMLOutputter для вывода XML
+        XMLOutputter xmlOutput = new XMLOutputter();
+        xmlOutput.setFormat(Format.getPrettyFormat());
+
+        try {
+            System.out.println("Current working directory: " + System.getProperty("user.dir"));
+
+            // Записываем XML документ в файл
+            xmlOutput.output(doc, new FileWriter("deployment.xml"));
+            System.out.println("XML файл успешно создан!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

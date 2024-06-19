@@ -1,13 +1,14 @@
 package com.example.cloudanalystt;
 
 import com.example.cloudanalystt.utils.utilsForSerializable.*;
+//import jakarta.xml.bind.annotation.XmlRootElement;
 
-import javax.xml.bind.annotation.XmlRootElement;
+//import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-@XmlRootElement
+//@XmlRootElement
 public class RootObjectToSaveData implements Serializable {
     private List<UserBaseData> listUserBases;
     private List<AppDeploymentConfigurationData> listAppDeploymentConf;

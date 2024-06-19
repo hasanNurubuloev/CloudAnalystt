@@ -2,8 +2,8 @@ package com.example.cloudanalystt.utils.utilsForSerializable;
 
 import javafx.beans.property.SimpleStringProperty;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+//import javax.xml.bind.annotation.XmlElement;
+//import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 public class PhysicalHWDetailsOfDCData  implements Serializable {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -53,10 +54,11 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="356.0" layoutY="312.0" text="Запросы">
+      <Label layoutX="302.0" layoutY="312.0" text="Состояния серверов">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
+      <Button fx:id="buttonExport" id="button_export" layoutX="614.0" layoutY="309.0" mnemonicParsing="false" text="Export" />
    </children>
 </AnchorPane>

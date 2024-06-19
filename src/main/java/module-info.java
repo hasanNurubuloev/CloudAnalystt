@@ -11,6 +11,12 @@ module com.example.cloudanalystt {
     requires com.fasterxml.jackson.databind;
     requires org.dhatim.fastexcel.reader;
 
+//    requires org.apache.poi.poi;
+//    requires org.apache.poi.ooxml;
+//    requires org.docx4j.core;
+//    requires org.docx4j.openxml_objects;
+//    requires jakarta.xml.bind;
+
     opens com.example.cloudanalystt to javafx.fxml;
     exports com.example.cloudanalystt;
     exports com.example.cloudanalystt.utils;

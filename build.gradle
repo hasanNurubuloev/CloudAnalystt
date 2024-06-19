@@ -4,6 +4,7 @@ plugins {
     id 'org.javamodularity.moduleplugin' version '1.8.12'
     id 'org.openjfx.javafxplugin' version '0.0.13'
     id 'org.beryx.jlink' version '2.25.0'
+
 }
 
 group 'com.example'
@@ -52,9 +53,14 @@ dependencies {
     implementation 'org.jdom:jdom2:2.0.6.1'
     implementation 'com.sun.xml.bind:jaxb-impl:2.3.3'
 
-    implementation 'org.apache.poi:poi-ooxml:5.2.3'
-    implementation 'org.apache.poi:poi:5.2.3'
+    implementation 'org.apache.poi:poi:5.2.2'
+    implementation 'org.apache.poi:poi-ooxml:5.2.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.13.0'
+
     implementation 'org.apache.commons:commons-compress:1.21'
+
+//    implementation 'org.docx4j:docx4j-JAXB-ReferenceImpl:11.4.5'
 
     implementation group: 'org.dhatim', name: 'fastexcel-reader', version: '0.18.0'
 //Thanks for using https://jar-download.com
@@ -77,6 +83,7 @@ jlink {
 jlinkZip {
     group = 'distribution'
 }
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
     options.compilerArgs += '--module-path'

@@ -1,20 +1,26 @@
 package com.example.cloudanalystt.ui;
 
 
+//import com.example.cloudanalystt.utils.ExcelExporter;
 import com.example.cloudanalystt.utils.ServersResponseTime;
 import com.example.cloudanalystt.utils.StateExcel;
 import com.example.cloudanalystt.utils.StateExcelData;
+import com.example.cloudanalystt.utils.TextExporter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.dhatim.fastexcel.reader.ReadableWorkbook;
 import org.dhatim.fastexcel.reader.Row;
 import org.dhatim.fastexcel.reader.Sheet;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -52,6 +58,8 @@ public class SimulationController {
     private TableColumn<StateExcel, String> endTimeCol;
     @FXML
     private TableColumn<StateExcel, String> durationTimeCol;
+    @FXML
+    private Button buttonExport;
     ObservableList<StateExcel> listAllRequests = FXCollections.observableArrayList();
 
     private ArrayList<Float> listUsersMetrics;
@@ -80,7 +88,7 @@ public class SimulationController {
 
         Map<String, List<Float>> serverResponseTimes = new TreeMap<>();
         listAllRequests.forEach(request -> {
-            String server = request.getHost().trim();
+            String server = request.getServer().trim();
             if (!server.startsWith("u")) {
                 serverResponseTimes.computeIfAbsent(server, k -> new ArrayList<>()).add(request.getDurationTime());
             }
@@ -100,7 +108,7 @@ public class SimulationController {
     }
 
     private void initTableRequests() {
-        hostCol.setCellValueFactory(cellData -> cellData.getValue().hostProperty());
+        hostCol.setCellValueFactory(cellData -> cellData.getValue().serverProperty());
         stateCol.setCellValueFactory(cellData -> cellData.getValue().stateProperty());
         startTimeCol.setCellValueFactory(cellData -> cellData.getValue().startTimeProperty());
         endTimeCol.setCellValueFactory(cellData -> cellData.getValue().endTimeProperty());
@@ -114,19 +122,106 @@ public class SimulationController {
 
         tableAllRequests.setItems(listAllRequests);
 
-        allRowsList.forEach((server, rowsList) -> {
+        buttonExport.setOnAction(event -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Сохранить файл");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+            // Отображение диалогового окна
+            File file = fileChooser.showSaveDialog(new Stage());
+            if (file != null) {
+                String filePath = file.getPath();
+                if (!filePath.toLowerCase().endsWith(".txt")) {
+                    // Если расширения нет, добавляем его
+                    filePath += ".txt";
+                    file = new File(filePath);
+                }
+                // Экспорт данных в текстовый файл
+                TextExporter.exportToTextFile(listAllRequests, file.getAbsolutePath());
+                System.out.println("Данные экспортированы в текстовый файл: " + file.getAbsolutePath());
+            } else {
+                System.out.println("Сохранение файла отменено.");
+            }
+        });
+
+//        allRowsList.forEach((server, rowsList) -> {
+//            for (int i = 0; i < rowsList.size(); i++) {
+//                if (i != rowsList.size() - 1) {
+//                    String state = rowsList.get(i).getLast();
+//                    if (!rowsList.get(i + 1).getLast().equals(state)) {
+//                        listAllRequests.add(new StateExcel(rowsList.get(i).get(1), rowsList.get(i).getLast(),
+//                                Float.parseFloat(rowsList.get(i).get(3)), Float.parseFloat(rowsList.get(i + 1).get(3)),
+//                                Float.parseFloat(rowsList.get(i + 1).get(3)) - Float.parseFloat(rowsList.get(i).get(3))));
+//                    }
+//                } else {
+//                    //TODO рассмотреть ситуацию когда последний элемент
+//                }
+//            }
+//        });
+
+
+        List<String> sortedKeys = new ArrayList<>(allRowsList.keySet());
+        sortedKeys.sort(new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                boolean s1ContainsU = s1.contains("u-");
+                boolean s2ContainsU = s2.contains("u-");
+                boolean s1StartsWithU = s1.startsWith("u");
+                boolean s2StartsWithU = s2.startsWith("u");
+
+                if (!s1ContainsU && !s2ContainsU) {
+                    return s1.compareTo(s2);
+                } else if (!s1ContainsU) {
+                    return -1;
+                } else if (!s2ContainsU) {
+                    return 1;
+                } else if (s1StartsWithU && s2StartsWithU) {
+                    return s1.compareTo(s2);
+                } else if (s1StartsWithU) {
+                    return -1;
+                } else if (s2StartsWithU) {
+                    return 1;
+                } else {
+                    String[] parts1 = s1.split("u-");
+                    String[] parts2 = s2.split("u-");
+                    if (parts1.length > 1 && parts2.length > 1) {
+                        int num1 = Integer.parseInt(parts1[1].split("\\.")[0]);
+                        int num2 = Integer.parseInt(parts2[1].split("\\.")[0]);
+                        int result = Integer.compare(num1, num2);
+                        if (result != 0) {
+                            return result;
+                        }
+                    }
+                    return s1.compareTo(s2);
+                }
+            }
+        });
+
+        // Перенос отсортированных данных в новый Map
+        Map<String, List<List<String>>> sortedAllRowsMap = new LinkedHashMap<>();
+        for (String key : sortedKeys) {
+            sortedAllRowsMap.put(key, allRowsList.get(key));
+        }
+
+        // Заполнение listAllRequests
+        sortedAllRowsMap.forEach((server, rowsList) -> {
             for (int i = 0; i < rowsList.size(); i++) {
                 if (i != rowsList.size() - 1) {
-                    String state = rowsList.get(i).getLast();
-                    if (!rowsList.get(i + 1).getLast().equals(state)) {
-                        listAllRequests.add(new StateExcel(rowsList.get(i).get(1), rowsList.get(i).getLast(), Float.parseFloat(rowsList.get(i).get(3)), Float.parseFloat(rowsList.get(i + 1).get(3)), Float.parseFloat(rowsList.get(i + 1).get(3)) - Float.parseFloat(rowsList.get(i).get(3))));
+//                    String state = rowsList.get(i).getLast();
+//                    if (!rowsList.get(i + 1).getLast().equals(state)) {
+                    String serverName = rowsList.get(i).get(1);
+                    if (serverName.contains(".")) {
+                        serverName = serverName.substring(0, serverName.indexOf('.'));
                     }
+                    listAllRequests.add(new StateExcel(serverName.trim(), rowsList.get(i).getLast(),
+                            Float.parseFloat(rowsList.get(i).get(3)), Float.parseFloat(rowsList.get(i + 1).get(3)),
+                            Float.parseFloat(rowsList.get(i + 1).get(3)) - Float.parseFloat(rowsList.get(i).get(3))));
+//                    }
                 } else {
                     //TODO рассмотреть ситуацию когда последний элемент
                 }
             }
         });
-
     }
 
     private void readFile() {
@@ -167,9 +262,9 @@ public class SimulationController {
             StateExcelData data = new StateExcelData(type, actor, type1, startTime, endTime, durationTime, level, state);
             userRowsMap.computeIfAbsent(actor, k -> new ArrayList<>()).add(data);
         }
-        if (actor.contains("u-")) {
-            allRowsList.computeIfAbsent(actor, k -> new ArrayList<>()).add(new ArrayList<>(rowData));
-        }
+//        if (actor.contains("u-")) {
+        allRowsList.computeIfAbsent(actor, k -> new ArrayList<>()).add(new ArrayList<>(rowData));
+//        }
     }
 
     private void getUserRequests() {

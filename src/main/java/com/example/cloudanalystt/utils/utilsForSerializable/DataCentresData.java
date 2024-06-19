@@ -3,9 +3,9 @@ package com.example.cloudanalystt.utils.utilsForSerializable;
 import com.example.cloudanalystt.utils.PhysicalHWDetailsOfDC;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+//
+//import javax.xml.bind.annotation.XmlElement;
+//import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 public class DataCentresData  implements Serializable {

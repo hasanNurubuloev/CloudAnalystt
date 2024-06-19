@@ -1,7 +1,7 @@
 package com.example.cloudanalystt.utils.utilsForSerializable;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+//import javax.xml.bind.annotation.XmlElement;
+//import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 public class AdvancedData implements Serializable {

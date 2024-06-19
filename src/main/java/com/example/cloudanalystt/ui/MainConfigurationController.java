@@ -244,7 +244,7 @@ public class MainConfigurationController {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            disableOtherButtons();
+         //   disableOtherButtons();
         });
         buttonInternetCharacteristics.setOnAction(event -> {
             disableOtherButtons();
@@ -737,7 +737,8 @@ public class MainConfigurationController {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            new XMLWriter().saveToXML(listUserBases, listAppConf, listDataCentres);
+            new XMLWriter().createPlatformFile(listUserBases, listAppConf, listDataCentres);
+            new XMLWriter().createDeploymentFile(listDataCentres);
         });
         buttonLoadConfiguration.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
