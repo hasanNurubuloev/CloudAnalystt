@@ -10,7 +10,7 @@ public class StateExcel {
     private StringProperty endTime;
     private StringProperty durationTime;
 
-    public StateExcel(String server, String state, float startTime, float endTime, float durationTime) {
+    public StateExcel(String server, String state, double startTime, double endTime, double durationTime) {
         this.server = new SimpleStringProperty(server);
         this.state = new SimpleStringProperty(state);
         this.startTime = new SimpleStringProperty(String.valueOf(startTime));
@@ -18,15 +18,15 @@ public class StateExcel {
         this.durationTime = new SimpleStringProperty(String.valueOf(durationTime));
     }
 
-    public float getDurationTime() {
-        return Float.parseFloat(durationTime.get());
+    public double getDurationTime() {
+        return Double.parseDouble(durationTime.get());
     }
 
     public StringProperty durationTimeProperty() {
         return durationTime;
     }
 
-    public void setDurationTime(float durationTime) {
+    public void setDurationTime(double durationTime) {
         this.durationTime.set(String.valueOf(durationTime));
     }
 
@@ -54,27 +54,27 @@ public class StateExcel {
         this.state.set(state);
     }
 
-    public float getStartTime() {
-        return  Float.parseFloat(startTime.get());
+    public double getStartTime() {
+        return  Double.parseDouble(startTime.get());
     }
 
     public StringProperty startTimeProperty() {
         return startTime;
     }
 
-    public void setStartTime(float startTime) {
+    public void setStartTime(double startTime) {
         this.startTime.set(String.valueOf(startTime));
     }
 
-    public float getEndTime() {
-        return Float.parseFloat(endTime.get());
+    public double getEndTime() {
+        return Double.parseDouble(endTime.get());
     }
 
     public StringProperty endTimeProperty() {
         return endTime;
     }
 
-    public void setEndTime(float endTime) {
+    public void setEndTime(double endTime) {
         this.endTime.set(String.valueOf(endTime));
     }
 }

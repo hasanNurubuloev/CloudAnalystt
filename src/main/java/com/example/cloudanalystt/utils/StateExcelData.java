@@ -4,13 +4,13 @@ public class StateExcelData {
     private String type;
     private String actor;
     private String type1;
-    private float startTime;
-    private float endTime;
-    private float durationTime;
+    private double startTime;
+    private double endTime;
+    private double durationTime;
     private int level;
     private String state;
 
-    public StateExcelData(String type, String actor, String type1 , float startTime, float endTime, float durationTime, int level, String state) {
+    public StateExcelData(String type, String actor, String type1 , double startTime, double endTime, double durationTime, int level, String state) {
         this.type = type;
         this.actor = actor;
         this.type1 = type1;
@@ -39,23 +39,23 @@ public class StateExcelData {
         this.actor = actor;
     }
 
-    public float getStartTime() {
+    public double getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(float startTime) {
+    public void setStartTime(double startTime) {
         this.startTime = startTime;
     }
 
-    public float getEndTime() {
+    public double getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(float endTime) {
+    public void setEndTime(double endTime) {
         this.endTime = endTime;
     }
 
-    public float getDurationTime() {
+    public double getDurationTime() {
         return durationTime;
     }
 

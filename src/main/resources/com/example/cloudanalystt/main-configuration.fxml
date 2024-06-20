@@ -30,7 +30,7 @@
                                     <children>
                                         <Label layoutX="14.0" layoutY="14.0" prefHeight="32.0" prefWidth="156.0" text="Продолжительность моделирования" wrapText="true" />
                                         <TextField id="value_sim_dur" fx:id="valueSimDurText" layoutX="185.0" layoutY="18.0" prefHeight="14.0" prefWidth="72.0" text="60.0" />
-                                        <ComboBox id="combobox_simulation_duration" fx:id="comboboxSimulationDuration" layoutX="271.0" layoutY="18.0" prefWidth="150.0" />
+                                        <ComboBox id="combobox_simulation_duration" fx:id="comboboxSimulationDuration" disable="true" layoutX="271.0" layoutY="18.0" prefWidth="150.0" />
                                         <Label layoutX="15.0" layoutY="62.0" prefHeight="32.0" prefWidth="115.0" text="Базы пользователей" wrapText="true" />
                                         <TableView id="table_users" fx:id="tableUserBases" editable="true" layoutX="140.0" layoutY="62.0" prefHeight="189.0" prefWidth="837.0">
                                             <columns>
@@ -50,8 +50,8 @@
                                         <TableView id="table_app_deployment_conf" fx:id="tableAppDeplConf" editable="true" layoutX="140.0" layoutY="309.0" prefHeight="191.0" prefWidth="841.0" style="-fx-background-color: #f2f2f2;">
                                             <columns>
                                                 <TableColumn id="data_center_col" fx:id="dataCenterCol" prefWidth="165.0" text="ЦОД" />
-                                                <TableColumn id="virtual_machines_col" fx:id="virtualMachinesCol" prefWidth="190.0" text="Количество&#10;виртуальных&#10;машин" />
-                                                <TableColumn id="image_size_col" fx:id="imageSizeCol" prefWidth="149.0" text="Размер &#10;изображения" />
+                                                <TableColumn id="virtual_machines_col" fx:id="virtualMachinesCol" prefWidth="190.0" text="Количество&#10;физических&#10;машин" />
+                                                <TableColumn id="image_size_col" fx:id="imageSizeCol" prefWidth="149.0" text="Размер &#10;образа&#10;приложения" />
                                                 <TableColumn id="memory_col" fx:id="memoryCol" prefWidth="153.0" text="Память" />
                                                 <TableColumn id="bandwidth_col" fx:id="bandwidth_col" prefWidth="183.0" text="Полоса &#10;пропускания &#10;сети" />
                                             </columns>
@@ -60,6 +60,8 @@
                                         <Button id="button_remove_table_users" fx:id="buttonRemoveTableUsers" layoutX="991.0" layoutY="171.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Удалить" />
                                         <Button fx:id="buttonAddApplicationConfTable" layoutX="991.0" layoutY="327.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="84.0" text="Добавить" />
                                         <Button fx:id="buttonRemoveApplicationConfTable" layoutX="991.0" layoutY="373.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="85.0" text="Удалить" />
+                              <TextField fx:id="textCountUserCycles" id="text_count_user_cycles" layoutX="602.0" layoutY="18.0" prefHeight="24.0" prefWidth="86.0" />
+                              <Label layoutX="444.0" layoutY="6.0" text="Количество&#10;пользовательских&#10;циклов" />
                                     </children>
                                 </AnchorPane>
                             </content>

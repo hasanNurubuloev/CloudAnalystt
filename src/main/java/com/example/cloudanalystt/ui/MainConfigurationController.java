@@ -185,6 +185,9 @@ public class MainConfigurationController {
     @FXML
     private TextField textExecutableInstructionLengthPrReq;
 
+    @FXML
+    private TextField textCountUserCycles;
+
     //Main buttons
     @FXML
     private Button buttonSaveConfiguration;
@@ -194,6 +197,7 @@ public class MainConfigurationController {
     private Button buttonDoneConfiguration;
     @FXML
     private Button buttonCancelConfiguration;
+
 
     @FXML
     void initialize() {
@@ -301,6 +305,8 @@ public class MainConfigurationController {
         ObservableList<String> itemsLBPolicy = FXCollections.observableArrayList("Циклический (Круговой) алгоритм", "Балансировка нагрузки c равным распределением", "Регулируемый алгоритм балансировки");
         comboBoxLBPolicy.setItems(itemsLBPolicy);
         comboBoxLBPolicy.setValue("Циклический (Круговой) алгоритм");
+
+        textCountUserCycles.setText("3");
     }
 
     private void initUserTable() {
@@ -738,7 +744,7 @@ public class MainConfigurationController {
                 System.out.println(e.getMessage());
             }
             new XMLWriter().createPlatformFile(listUserBases, listAppConf, listDataCentres);
-            new XMLWriter().createDeploymentFile(listDataCentres);
+            new XMLWriter().createDeploymentFile(listDataCentres, textCountUserCycles.getText());
         });
         buttonLoadConfiguration.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();

@@ -88,9 +88,9 @@ public class XMLWriter {
         zone.addContent(link2);
         zone.addContent(link3);
 
-        zone.addContent(createZoneRoute(dataCenter.getAttributeValue("id"), users.getAttributeValue("id"),dataCenter.getChild("host").getAttributeValue("id"), users.getAttributeValue("router_id"), link1.getName()));
-        zone.addContent(createZoneRoute(dataCenter.getAttributeValue("id"), blades.getAttributeValue("id"),dataCenter.getChild("host").getAttributeValue("id"), blades.getChild("cluster").getAttributeValue("router_id"), link2.getName()));
-        zone.addContent(createZoneRoute(blades.getAttributeValue("id"), users.getAttributeValue("id"),blades.getChild("cluster").getAttributeValue("router_id"), users.getAttributeValue("router_id"), link3.getName()));
+        zone.addContent(createZoneRoute(dataCenter.getAttributeValue("id"), users.getAttributeValue("id"), dataCenter.getChild("host").getAttributeValue("id"), users.getAttributeValue("router_id"), link1.getName()));
+        zone.addContent(createZoneRoute(dataCenter.getAttributeValue("id"), blades.getAttributeValue("id"), dataCenter.getChild("host").getAttributeValue("id"), blades.getChild("cluster").getAttributeValue("router_id"), link2.getName()));
+        zone.addContent(createZoneRoute(blades.getAttributeValue("id"), users.getAttributeValue("id"), blades.getChild("cluster").getAttributeValue("router_id"), users.getAttributeValue("router_id"), link3.getName()));
 
         // Создаем объект XMLOutputter для вывода XML
         XMLOutputter xmlOutput = new XMLOutputter();
@@ -134,7 +134,7 @@ public class XMLWriter {
         return zoneRoute;
     }
 
-    public void createDeploymentFile (ObservableList<DataCentres> listDataCenters){
+    public void createDeploymentFile(ObservableList<DataCentres> listDataCenters, String countUserCycles) {
         // Создаем корневой элемент platform с атрибутом version
         Element platform = new Element("platform");
         platform.setAttribute("version", "4.1");
@@ -152,7 +152,7 @@ public class XMLWriter {
 
         var listServerDC = listDataCenters.getFirst().getListServersDC();
         // Добавляем элементы argument с значениями
-        for (String value : new String[]{"1", String.valueOf(listServerDC.getFirst().getCount()), String.valueOf(listServerDC.get(1).getCount()), String.valueOf(listServerDC.get(4).getCount()), String.valueOf(listServerDC.get(3).getCount()), String.valueOf(listServerDC.get(2).getCount()), "2", "1000", "10000", "100000000"}) {
+        for (String value : new String[]{"1", String.valueOf(listServerDC.getFirst().getCount()), String.valueOf(listServerDC.get(1).getCount()), String.valueOf(listServerDC.get(4).getCount()), String.valueOf(listServerDC.get(3).getCount()), String.valueOf(listServerDC.get(2).getCount()), countUserCycles, "1000", "10000", "100000000"}) {
             Element argument = new Element("argument");
             argument.setAttribute("value", value);
             actor.addContent(argument);

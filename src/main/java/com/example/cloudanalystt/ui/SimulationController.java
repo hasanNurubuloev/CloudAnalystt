@@ -2,6 +2,7 @@ package com.example.cloudanalystt.ui;
 
 
 //import com.example.cloudanalystt.utils.ExcelExporter;
+
 import com.example.cloudanalystt.utils.ServersResponseTime;
 import com.example.cloudanalystt.utils.StateExcel;
 import com.example.cloudanalystt.utils.StateExcelData;
@@ -9,10 +10,7 @@ import com.example.cloudanalystt.utils.TextExporter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -62,13 +60,16 @@ public class SimulationController {
     private Button buttonExport;
     ObservableList<StateExcel> listAllRequests = FXCollections.observableArrayList();
 
-    private ArrayList<Float> listUsersMetrics;
+    private ArrayList<Double> listUsersMetrics;
     @FXML
     private Label textMinValue;
     @FXML
     private Label textMaxValue;
     @FXML
     private Label textAvgValue;
+
+    @FXML
+    private Label textFactSimDur;
 
     @FXML
     void initialize() {
@@ -86,19 +87,31 @@ public class SimulationController {
 
         tableServerResponseTime.setItems(listServerResponseTime);
 
-        Map<String, List<Float>> serverResponseTimes = new TreeMap<>();
-        listAllRequests.forEach(request -> {
+        Map<String, List<Double>> serverResponseTimes = new TreeMap<>();
+        /*listAllRequests.forEach(request -> {
             String server = request.getServer().trim();
-            if (!server.startsWith("u")) {
+            if ( server.contains("u-") && !server.startsWith("db")
+                    && !server.startsWith("cb") && !server.startsWith("lb")) {
                 serverResponseTimes.computeIfAbsent(server, k -> new ArrayList<>()).add(request.getDurationTime());
             }
-        });
+        });*/
+        for (int i = 0; i < listAllRequests.size(); i++) {
+            String server = listAllRequests.get(i).getServer().trim();
+            if (server.contains("u-") && !server.startsWith("db")
+                    && !server.startsWith("cb") && !server.startsWith("lb")) {
+                if (i < listAllRequests.size() - 3 && listAllRequests.get(i).getState().trim().equals("send")
+                        && listAllRequests.get(i + 1).getState().trim().equals("execute") && listAllRequests.get(i + 2).getState().trim().equals("receive")
+                        && listAllRequests.get(i + 3).getState().trim().equals("execute")) {
+                    serverResponseTimes.computeIfAbsent(server, k -> new ArrayList<>()).add(listAllRequests.get(i + 3).getStartTime() - listAllRequests.get(i).getStartTime());
+                }
+            }
+        }
         System.out.println("Server response time statistics:");
         serverResponseTimes.forEach((server, responseTimes) -> {
-            float minResponseTime = Collections.min(responseTimes);
-            float maxResponseTime = Collections.max(responseTimes);
-            float avgResponseTime = (float) responseTimes.stream().mapToDouble(Float::doubleValue).average().orElse(0.0);
-            listServerResponseTime.add(new ServersResponseTime(server, minResponseTime, maxResponseTime, avgResponseTime));
+            double minResponseTime = Collections.min(responseTimes);
+            double maxResponseTime = Collections.max(responseTimes);
+            double avgResponseTime = responseTimes.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+            listServerResponseTime.add(new ServersResponseTime(server,  minResponseTime, maxResponseTime, avgResponseTime));
             System.out.println("Server: " + server);
             System.out.println("Min response time: " + minResponseTime);
             System.out.println("Max response time: " + maxResponseTime);
@@ -125,7 +138,7 @@ public class SimulationController {
         buttonExport.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Сохранить файл");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT Files", "*.txt"));
 
             // Отображение диалогового окна
             File file = fileChooser.showSaveDialog(new Stage());
@@ -214,18 +227,25 @@ public class SimulationController {
                         serverName = serverName.substring(0, serverName.indexOf('.'));
                     }
                     listAllRequests.add(new StateExcel(serverName.trim(), rowsList.get(i).getLast(),
-                            Float.parseFloat(rowsList.get(i).get(3)), Float.parseFloat(rowsList.get(i + 1).get(3)),
-                            Float.parseFloat(rowsList.get(i + 1).get(3)) - Float.parseFloat(rowsList.get(i).get(3))));
+                            Double.parseDouble(rowsList.get(i).get(3)), Double.parseDouble(rowsList.get(i + 1).get(3)),
+                            Double.parseDouble(rowsList.get(i + 1).get(3)) - Double.parseDouble(rowsList.get(i).get(3))));
 //                    }
                 } else {
                     //TODO рассмотреть ситуацию когда последний элемент
                 }
             }
         });
+        allRowsList.forEach((key, stateExcelList) -> {
+            stateExcelList.forEach(stateExcel -> {
+                if (stateExcel.get(1).trim().equals("cloudBroker-1") && !Objects.equals(stateExcel.getLast().trim(), "sleep")) {
+                    textFactSimDur.setText(String.valueOf(stateExcel.get(4)));
+                }
+            });
+        });
     }
 
     private void readFile() {
-        Path path = Path.of("/home/hasan/IdeaProjects/CloudAnalystt/state111.xlsx");
+        Path path = Path.of("/home/hasan/IdeaProjects/CloudAnalystt/state1.xlsx");
         try (FileInputStream fis = new FileInputStream(path.toFile());
              ReadableWorkbook workbook = new ReadableWorkbook(fis)) {
             Sheet sheet = workbook.getFirstSheet();
@@ -254,9 +274,9 @@ public class SimulationController {
         if (actor.startsWith("u")) { // фильтрация по условию
             String type = rowData.get(0).trim();
             String type1 = rowData.get(2).trim();
-            float startTime = Float.parseFloat(rowData.get(3).trim());
-            float endTime = Float.parseFloat(rowData.get(4).trim());
-            float durationTime = Float.parseFloat(rowData.get(5).trim());
+            double startTime = Float.parseFloat(rowData.get(3).trim());
+            double endTime = Float.parseFloat(rowData.get(4).trim());
+            double durationTime = Float.parseFloat(rowData.get(5).trim());
             int level = (int) Double.parseDouble(rowData.get(6).trim());
             String state = rowData.get(7).trim();
             StateExcelData data = new StateExcelData(type, actor, type1, startTime, endTime, durationTime, level, state);
@@ -268,12 +288,12 @@ public class SimulationController {
     }
 
     private void getUserRequests() {
-        ArrayList<Float> listUsersTimeRequests = new ArrayList<>();
+        ArrayList<Double> listUsersTimeRequests = new ArrayList<>();
         userRowsMap.forEach((user, rowsList) -> {
             for (int i = 0; i < rowsList.size() - 1; i++) {
                 StateExcelData data = rowsList.get(i);
                 if (i < rowsList.size() - 3 && data.getState().equals("send") && rowsList.get(i + 1).getState().equals("execute") && rowsList.get(i + 2).getState().equals("receive") && rowsList.get(i + 3).getState().equals("execute")) {
-                    float subtraction = rowsList.get(i + 3).getStartTime() - data.getStartTime();
+                    double subtraction = rowsList.get(i + 3).getStartTime() - data.getStartTime();
 //                    listUserRequests.add(new StateExcel(rowsList.get(i).getActor(), rowsList.get(i).getState(), rowsList.get(i).getStartTime(), rowsList.get(i + 1).getStartTime(), rowsList.get(i + 1).getStartTime() - rowsList.get(i).getStartTime()));
                     listUsersTimeRequests.add(subtraction);
                 }
@@ -285,9 +305,9 @@ public class SimulationController {
         textAvgValue.setText(String.valueOf(listUsersMetrics.get(2)));
     }
 
-    private ArrayList<Float> getMinMaxAvg(ArrayList<Float> list) {
-        float min = 0, max = 0, avg = 0, sum = 0;
-        ArrayList<Float> listMetrics = new ArrayList<>();
+    private ArrayList<Double> getMinMaxAvg(ArrayList<Double> list) {
+        double min = 0, max = 0, avg = 0, sum = 0;
+        ArrayList<Double> listMetrics = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             if (i == 0) {
                 min = list.get(i);

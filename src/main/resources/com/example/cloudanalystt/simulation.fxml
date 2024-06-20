@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="574.0" prefWidth="765.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cloudanalystt.ui.SimulationController">
    <children>
-      <TableView id="table_all_requests" fx:id="tableAllRequests" layoutX="71.0" layoutY="340.0" prefHeight="160.0" prefWidth="639.0">
+      <TableView id="table_all_requests" fx:id="tableAllRequests" layoutX="71.0" layoutY="385.0" prefHeight="160.0" prefWidth="639.0">
         <columns>
           <TableColumn id="host_col" fx:id="hostCol" prefWidth="167.0" text="Пользователь" />
           <TableColumn id="state_col" fx:id="stateCol" prefWidth="96.0" text="Состояние" />
@@ -38,10 +38,10 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <Label id="text_min_value" fx:id="textMinValue" layoutX="168.0" layoutY="75.0" prefHeight="16.0" prefWidth="106.0" />
-      <Label id="text_max_value" fx:id="textMaxValue" layoutX="330.0" layoutY="75.0" prefHeight="16.0" prefWidth="106.0" />
-      <Label id="text_avg_value" fx:id="textAvgValue" layoutX="482.0" layoutY="75.0" prefHeight="16.0" prefWidth="112.0" />
-      <TableView id="table_server_response" fx:id="tableServerResponseTime" layoutX="71.0" layoutY="152.0" prefHeight="149.0" prefWidth="639.0">
+      <Label id="text_min_value" fx:id="textMinValue" layoutX="148.0" layoutY="75.0" prefHeight="16.0" prefWidth="145.0" />
+      <Label id="text_max_value" fx:id="textMaxValue" layoutX="318.0" layoutY="75.0" prefHeight="16.0" prefWidth="146.0" />
+      <Label id="text_avg_value" fx:id="textAvgValue" layoutX="482.0" layoutY="75.0" prefHeight="16.0" prefWidth="139.0" />
+      <TableView id="table_server_response" fx:id="tableServerResponseTime" layoutX="71.0" layoutY="197.0" prefHeight="149.0" prefWidth="639.0">
         <columns>
           <TableColumn id="server_col" fx:id="serverCol" prefWidth="162.0" text="Сервер" />
             <TableColumn id="min_col" fx:id="minCol" prefWidth="148.0" text="Минимальное" />
@@ -49,16 +49,18 @@
             <TableColumn id="avg_col" fx:id="avgCol" prefWidth="154.0" text="Среднее" />
         </columns>
       </TableView>
-      <Label layoutX="260.0" layoutY="127.0" text="Время отклика по серверам">
+      <Label layoutX="260.0" layoutY="172.0" text="Время отклика по серверам">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="302.0" layoutY="312.0" text="Состояния серверов">
+      <Label layoutX="302.0" layoutY="357.0" text="Состояния серверов">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="buttonExport" id="button_export" layoutX="614.0" layoutY="309.0" mnemonicParsing="false" text="Export" />
+      <Button id="button_export" fx:id="buttonExport" layoutX="614.0" layoutY="354.0" mnemonicParsing="false" text="Export" />
+      <Label layoutX="14.0" layoutY="115.0" text="Фактическая &#10;продолжительность &#10;моделирования" />
+      <Label id="text_fact_sim_dur" fx:id="textFactSimDur" layoutX="184.0" layoutY="123.0" prefHeight="32.0" prefWidth="83.0" />
    </children>
 </AnchorPane>
